@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>韓文單字閃卡</title>
+<style>
+:root{--bg:#f6f5f1;--sf:#fff;--tx:#1f1f1c;--mu:#77756d;--bd:#e2e0d8;--ac:#3d5af1;--ac2:#e8ecff;--ok:#1d9a5b;--no:#d6453d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171a;--sf:#222226;--tx:#f0efe9;--mu:#9a98a0;--bd:#38383e;--ac:#8196ff;--ac2:#2a2f4d;--ok:#4cc88a;--no:#f0756d}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;min-height:100vh}
+main{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:4px 0 14px}
+nav{display:flex;gap:6px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:4px;margin-bottom:16px}
+nav button{flex:1;border:0;background:none;color:var(--mu);padding:10px;border-radius:9px;font-size:15px;font-weight:600;cursor:pointer}
+nav button.on{background:var(--ac2);color:var(--ac)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:var(--mu);font-size:14px;flex-wrap:wrap}
+.seg{display:flex;gap:4px}
+.chip{border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:20px;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 20px;cursor:pointer;user-select:none;position:relative}
+.card .lab{position:absolute;top:14px;left:18px;font-size:12px;color:var(--mu)}
+.card .big{font-size:44px;font-weight:700;line-height:1.3;word-break:break-word}
+.card .big.zh{font-size:36px}
+.card .hint{margin-top:18px;font-size:13px;color:var(--mu)}
+.spk{margin-top:16px;border:1px solid var(--bd);background:var(--ac2);color:var(--ac);border-radius:999px;padding:9px 18px;font-size:15px;cursor:pointer}
+.act{display:flex;gap:10px;margin-top:14px}
+.act button{flex:1;padding:15px;border-radius:14px;border:0;font-size:16px;font-weight:700;color:#fff;cursor:pointer}
+.act .nx{background:var(--ac)}
+.act button:disabled{opacity:.35}
+.sec{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:17px;font-family:inherit}
+textarea{min-height:90px;font-size:14px}
+.pri{margin-top:14px;width:100%;padding:13px;border:0;border-radius:12px;background:var(--ac);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.sm{border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;padding:8px 12px;font-size:13px;cursor:pointer}
+.row{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--bd)}
+.row:last-child{border:0}
+.row .w{flex:1;min-width:0}.row .k{font-size:20px;font-weight:700}.row .z{font-size:14px;color:var(--mu)}
+.row .s{font-size:12px;color:var(--mu);white-space:nowrap}
+.ib{border:0;background:none;font-size:20px;cursor:pointer;padding:6px;color:var(--tx)}
+.msg{font-size:13px;color:var(--mu);margin:8px 0}
+.empty{text-align:center;color:var(--mu);padding:40px 0}
+.done{font-size:15px}
+.ans{display:flex;gap:8px;margin-top:14px}
+.ans input{flex:1}
+.res{min-height:22px;margin-top:8px;font-size:14px;font-weight:600;text-align:center}
+.res.good{color:var(--ok)}.res.bad{color:var(--no)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.top h1{margin:4px 0}
+.tagsug{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:28px}.stat span{font-size:12px;color:var(--mu)}
+.h2{font-size:15px;font-weight:700;margin:0 0 12px}
+.pb{height:10px;border-radius:6px;background:var(--bd);overflow:hidden;display:flex}
+.pb i{display:block;height:100%}
+.rb{margin-bottom:12px}.rl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:120px}
+.bars .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:11px;color:var(--mu);gap:3px}
+.bars .b{width:100%;background:var(--ac);border-radius:6px 6px 0 0;min-height:2px}
+.aibox{white-space:pre-wrap;font-size:14px;line-height:1.7;margin-top:12px}
+select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:15px;font-family:inherit}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.dlg{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:18px;width:100%;max-width:380px}
+.dlg p{margin:0 0 12px;font-size:15px}
+.dlg .btns{display:flex;gap:8px;margin-top:14px}
+.dlg .btns button{flex:1;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:15px;font-weight:600;cursor:pointer}
+.dlg .btns .go{background:var(--ac);border-color:var(--ac);color:#fff}
+.sg{display:flex;flex:1;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:var(--sf)}
+.sg button{flex:1;border:0;border-right:1px solid var(--bd);background:var(--sf);color:var(--tx);padding:9px 6px;font-size:14px;cursor:pointer}
+.sg button:last-child{border-right:0}
+.sg button.on{background:var(--ac);color:#fff;font-weight:700}
+.sg.big{margin-bottom:12px;border-radius:14px}
+.sg.big button{padding:13px 6px;font-size:16px;font-weight:700}
+.opts{padding:12px 14px;margin-bottom:12px}
+.orow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.orow:last-child{margin-bottom:0}
+.ol{width:34px;flex:none;font-size:13px;color:var(--mu)}
+.orow select{flex:1;width:auto;padding:9px}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>🇰🇷 韓文單字閃卡</h1><button class="chip" id="syncpill">⏳ 連線中</button></div>
+<nav id="nav">
+  <button data-t="review" class="on">複習</button>
+  <button data-t="list">單字表</button>
+  <button data-t="add">新增</button>
+  <button data-t="stats">分析</button>
+  <button data-t="settings">設定</button>
+</nav>
+
+<section id="review">
+  <div class="sg big" id="modes">
+    <button class="on" data-g="learn">📖 學習</button>
+    <button data-g="game">🎮 遊戲</button>
+  </div>
+  <div class="sec opts">
+    <div class="orow"><span class="ol">題型</span>
+      <div class="sg">
+        <button class="on" data-d="rand">隨機</button>
+        <button data-d="zh">中 → 韓</button>
+        <button data-d="ko">韓 → 中</button>
+      </div>
+    </div>
+    <div class="orow"><span class="ol">範圍</span>
+      <div class="sg">
+        <button class="on" data-m="all">全部單字</button>
+        <button data-m="weak">只練不熟的</button>
+      </div>
+    </div>
+    <div class="orow"><span class="ol">標籤</span><select id="catsel" aria-label="標籤"></select></div>
+  </div>
+  <div class="bar"><span id="prog"></span><span id="stat"></span></div>
+  <div id="stage"></div>
+</section>
+
+<section id="list" hidden></section>
+
+<section id="add" hidden>
+  <div class="sec">
+    <label>中文 / 意思</label>
+    <input id="azh" placeholder="例如：姜玗進" autocomplete="off">
+    <label>韓文</label>
+    <input id="ako" placeholder="例如：강우진" autocomplete="off" lang="ko">
+    <label>#標籤（可輸入多個，用空格分開；留空會自動加標籤）</label>
+    <input id="acat" placeholder="例如：#人名 #食物" autocomplete="off">
+    <div class="tagsug" id="tagsug"></div>
+    <button class="sm" id="trbtn" style="margin-top:12px;width:100%;padding:12px">✨ 自動翻譯（中文 ⇄ 韓文）</button>
+    <button class="pri" id="addbtn">加入單字</button>
+    <div class="msg" id="addmsg"></div>
+  </div>
+  <div class="sec">
+    <label>批次新增（一行一個，格式：中文,韓文,#標籤1 #標籤2；標籤可省略，會自動加標籤）</label>
+    <textarea id="bulk" placeholder="姜玗進,강우진&#10;FLARE U,플레어유"></textarea>
+    <button class="pri" id="bulkbtn" style="background:var(--tx);color:var(--bg)">批次加入</button>
+  </div>
+  <div class="sec">
+    <div class="msg" id="syncmsg"></div>
+    <button class="sm" id="tidy">🏷️ 自動為「無標籤」單字加標籤</button>
+    <div class="msg" id="tidymsg"></div>
+    <button class="sm" id="reset">重設學習進度</button>
+  </div>
+</section>
+<section id="stats" hidden></section>
+<section id="settings" hidden>
+  <div class="sec">
+    <div class="h2">☁️ 跨裝置同步（GitHub Gist）</div>
+    <div class="msg">GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token，只勾選「gist」權限，把權杖貼在下面。每台裝置都要貼同一個權杖。</div>
+    <label>GitHub 權杖</label>
+    <input id="stoken" type="password" autocomplete="off" placeholder="ghp_…">
+    <label>Gist ID（第一台裝置留空，會自動建立；其他裝置請貼上同一個 ID）</label>
+    <input id="sgist" autocomplete="off" placeholder="自動產生">
+    <button class="pri" id="ssave">儲存並同步</button>
+    <div class="msg" id="sstat"></div>
+  </div>
+  <div class="sec">
+    <div class="h2">✨ AI 功能（Gemini 免費額度）</div>
+    <div class="msg">用於自動翻譯、自動標籤、學習建議。到 aistudio.google.com/apikey 建立免費金鑰。金鑰只存在這台裝置，每台裝置要各貼一次。免費額度的內容可能被 Google 用來改進產品。</div>
+    <label>Gemini API 金鑰</label>
+    <input id="sgem" type="password" autocomplete="off" placeholder="AIza…">
+    <label>模型名稱（出錯時可改成 Google 目前提供的 Flash 模型，例如 gemini-3.5-flash）</label>
+    <input id="smodel" autocomplete="off" placeholder="gemini-flash-latest">
+    <button class="pri" id="gsave">儲存</button>
+    <div class="msg" id="gstat"></div>
+  </div>
+  <div class="sec">
+    <div class="h2">💾 備份</div>
+    <button class="sm" id="exp">匯出單字</button>
+    <button class="sm" id="impbtn">匯入單字</button>
+    <input type="file" id="impf" accept=".json,application/json" hidden>
+    <div class="msg" id="bstat"></div>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+var SEED=[["姜玗進","강우진","人名"],["FLARE U","플레어유","品牌"],["崔立于","최립우","人名"]];
+var words=[],dir="zh",mode="all",cur=null,flipped=false,idx=0,queue=[],checked=null,typed="",pref="rand",rolledFor=null;
+var game=false,timer=null,deadline=0,lastT=0,tkey='',gOk=0,gN=0,gS=0,gBest=0,GT=10000,qn=0;
+function resetAns(){checked=null;typed="";rolledFor=null;qn++}
+var catf="all";
+function parseTags(v){
+  var a=Array.isArray(v)?v:String(v||"").split(/[\s,，、#＃]+/),out=[];
+  a.forEach(function(t){t=String(t).replace(/^[#＃]+/,"").trim().slice(0,16);if(t&&t!=="未分類"&&out.indexOf(t)<0)out.push(t)});
+  return out.slice(0,8);
+}
+function tagsOf(w){return Array.isArray(w.tags)?w.tags:parseTags(w.cat)}
+function hasTag(w,t){var a=tagsOf(w);return t==="__none"?!a.length:a.indexOf(t)>=0}
+function tagStr(w){var a=tagsOf(w);return a.length?a.map(function(t){return "#"+t}).join(" "):"（無標籤）"}
+function norm(s){return s.normalize("NFC").toLowerCase().replace(/[\s·.,，。]/g,"")}
+function checkAns(){
+  var v=$("#ans").value;if(!v.trim()||flipped)return;
+  var ans=dir==="zh"?cur.ko:cur.zh;
+  typed=v;checked=norm(v)===norm(ans);record(checked);flipped=true;renderReview();speak(cur.ko);
+}
+var ref=null,usingDb=false,LS="kr-flash-v1";
+var $=function(s){return document.querySelector(s)};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function mk(zh,ko,cat){return {id:uid(),zh:zh.trim(),ko:ko.trim(),tags:parseTags(cat),ok:0,no:0,streak:0}}
+
+/* ---- storage: cloud (sync across devices) with local fallback ---- */
+function localLoad(){try{var s=localStorage.getItem(LS);return s?JSON.parse(s):null}catch(e){return null}}
+function localSave(){try{localStorage.setItem(LS,JSON.stringify(words))}catch(e){}}
+var cfg=(function(){try{return JSON.parse(localStorage.getItem(LS+"-cfg"))||{}}catch(e){return {}}})();
+function saveCfg(){try{localStorage.setItem(LS+"-cfg",JSON.stringify(cfg))}catch(e){}}
+async function ai(prompt){
+  if(!cfg.gem){var e0=new Error("nokey");e0.code="nokey";throw e0}
+  var model=cfg.model||"gemini-flash-latest";
+  var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",{
+    method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":cfg.gem},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+  });
+  if(!r.ok){var e=new Error("http");e.status=r.status;e.code=r.status===429?"rate_limited":"http";throw e}
+  var j=await r.json();
+  return (((j.candidates||[])[0]||{}).content&&j.candidates[0].content.parts||[]).map(function(p){return p.text||""}).join("");
+}
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function key(w){return w.zh+"|"+w.ko}
+var FILE="kr-flashcards.json",API="https://api.github.com/gists",rev=0,pushT=null,pushing=false,again=false,lastPull=0;
+try{rev=+localStorage.getItem(LS+"-rev")||0}catch(e){}
+function setRev(v){rev=v;try{localStorage.setItem(LS+"-rev",String(v))}catch(e){}}
+function hadSynced(){try{return localStorage.getItem(LS+"-synced")==="1"}catch(e){return false}}
+function markSynced(v){try{v?localStorage.setItem(LS+"-synced","1"):localStorage.removeItem(LS+"-synced")}catch(e){}}
+function syncOk(){return "☁️ 已同步（"+words.length+" 個單字）"}
+function gh(path,opt){
+  opt=opt||{};
+  opt.headers={"Authorization":"Bearer "+cfg.token,"Accept":"application/vnd.github+json","Content-Type":"application/json"};
+  return fetch(API+path,opt).then(function(r){
+    if(!r.ok){var e=new Error("http");e.status=r.status;throw e}
+    return r.json();
+  });
+}
+function body(){return JSON.stringify({rev:rev,words:words})}
+function save(){localSave();setRev(Date.now());schedulePush()}
+function schedulePush(){if(!cfg.token||!cfg.gist)return;clearTimeout(pushT);pushT=setTimeout(push,1200)}
+function push(){
+  if(!cfg.token||!cfg.gist)return;
+  if(pushing){again=true;return}
+  pushing=true;$("#syncmsg").textContent="☁️ 同步中…";
+  var f={};f[FILE]={content:body()};
+  gh("/"+cfg.gist,{method:"PATCH",body:JSON.stringify({files:f})}).then(
+    function(){$("#syncmsg").textContent=syncOk()},
+    function(e){$("#syncmsg").textContent="⚠️ 同步失敗（"+(e.status||"網路錯誤")+"），已存在本機。"}
+  ).then(function(){pushing=false;if(again){again=false;push()}});
+}
+function seed(){return SEED.map(function(p){return mk(p[0],p[1],p[2])})}
+function applyWords(w){
+  words=clone(w);
+  if(cur){cur=words.filter(function(x){return x.id===cur.id})[0]||null}
+  render();
+}
+async function pull(){
+  var g=await gh("/"+cfg.gist),file=g.files&&g.files[FILE],remote=null;
+  if(file){
+    if(file.truncated){remote=await (await fetch(file.raw_url)).json()}
+    else{try{remote=JSON.parse(file.content)}catch(e){}}
+  }
+  lastPull=Date.now();
+  if(!remote||!remote.words){push();return}
+  var cw=remote.words,crev=remote.rev||0;
+  if(!hadSynced()){
+    var merged=clone(cw),have={},ids={};
+    merged.forEach(function(w){have[key(w)]=1;ids[w.id]=1});
+    words.forEach(function(w){if(!ids[w.id]&&!have[key(w)]){merged.push(w);have[key(w)]=1}});
+    applyWords(merged);localSave();setRev(Date.now());markSynced(true);push();
+  }else if(crev>rev){
+    applyWords(cw);localSave();setRev(crev);
+  }else if(rev>crev){
+    push();
+  }
+  if(!pushing)$("#syncmsg").textContent=syncOk();
+}
+async function connect(){
+  if(!cfg.token){$("#syncmsg").textContent="目前資料只存在這台裝置（到「設定」連接 GitHub，就能跨裝置同步）。";return}
+  $("#syncmsg").textContent="☁️ 連線雲端中…";
+  try{
+    if(!cfg.gist){
+      var f={};f[FILE]={content:body()};
+      var g=await gh("",{method:"POST",body:JSON.stringify({description:"韓文單字閃卡資料",public:false,files:f})});
+      cfg.gist=g.id;saveCfg();markSynced(true);
+      $("#syncmsg").textContent=syncOk();
+    }else{await pull()}
+  }catch(e){
+    $("#syncmsg").textContent=e.status===401?"⚠️ GitHub 權杖無效或已過期。":e.status===404?"⚠️ 找不到這個 Gist，請檢查 Gist ID 與權杖是否屬於同一個帳號。":"⚠️ 無法連線 GitHub，目前使用本機資料。";
+  }
+}
+document.addEventListener("visibilitychange",function(){
+  if(!document.hidden&&cfg.token&&cfg.gist&&!pushing&&Date.now()-lastPull>15000){lastPull=Date.now();pull().catch(function(){})}
+});
+async function init(){
+  var loc=localLoad();
+  applyWords(loc&&loc.length?loc:[]);
+  if(!words.length&&!cfg.gist){applyWords(seed());localSave()}
+  $("#syncmsg").textContent="目前資料只存在這台裝置。";
+  await connect();
+}
+
+/* ---- speech ---- */
+var voice=null;
+function pickVoice(){
+  var vs=speechSynthesis.getVoices();
+  voice=vs.find(function(v){return /^ko/i.test(v.lang)})||null;
+}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function speak(t){
+  if(!("speechSynthesis" in window)){alert("這個瀏覽器不支援語音播放");return}
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=.85;
+  if(voice)u.voice=voice;
+  speechSynthesis.speak(u);
+}
+
+/* ---- review ---- */
+function scope(){return catf==="all"?words.slice():words.filter(function(w){return hasTag(w,catf)})}
+function pool(){
+  var p=scope();
+  return mode==="weak"?p.filter(function(w){return w.streak<2}):p;
+}
+function pick(){
+  var p=pool();
+  if(!p.length)return null;
+  // weight: weaker words appear more often; avoid repeating same card
+  var ws=p.map(function(w){return w===cur||w.id===(cur&&cur.id)&&p.length>1?0:1+Math.max(0,3-w.streak)*2+Math.min(w.no,4)});
+  var tot=ws.reduce(function(a,b){return a+b},0),r=Math.random()*tot;
+  for(var i=0;i<p.length;i++){r-=ws[i];if(r<=0)return p[i]}
+  return p[0];
+}
+function renderReview(){
+  if(!game){stopTimer();tkey=''}
+  var st=$("#stage");
+  var sc=scope(),known=sc.filter(function(w){return w.streak>=2}).length;
+  $("#prog").textContent="已熟 "+known+" / "+sc.length;
+  $("#stat").textContent=cur?"✓"+cur.ok+"  ✗"+cur.no:"";
+  if(!words.length){st.innerHTML='<div class="empty">還沒有單字，請到「新增」加入。</div>';return}
+  if(!cur)cur=pick();
+  if(!cur){st.innerHTML='<div class="empty done">🎉 不熟的單字都複習完了！<br><br><button class="sm" id="allbtn">改回複習全部</button></div>';
+    $("#allbtn").onclick=function(){setMode("all")};return}
+  if(rolledFor!==cur.id){dir=pref==="rand"?(Math.random()<.5?"zh":"ko"):pref;rolledFor=cur.id}
+  if(game){var tk=qn+':'+(flipped?1:0);if(tk!==tkey){tkey=tk;startTimer()}}
+  var front=dir==="zh"?cur.zh:cur.ko, back=dir==="zh"?cur.ko:cur.zh;
+  var html=(game?'<div class="pb" style="margin-bottom:8px"><i id="tbar" style="width:100%;background:var(--ac)"></i></div><div class="bar"><span id="tnum">⏱ 10 秒</span><span>🎯 '+gOk+' / '+gN+'　🔥 連續 '+gS+'（最高 '+gBest+'）</span></div>':'')+'<div class="card" id="card"><span class="lab">'+(flipped?"答案":"題目")+'</span>';
+  if(!flipped){
+    html+='<div class="big'+(dir==="zh"?" zh":"")+'" lang="'+(dir==="zh"?"zh-Hant":"ko")+'"></div><div class="hint">'+(game?"請在時間內作答，沒作答會自動跳下一題":"點一下卡片看答案（直接看答案會算不熟）")+'</div>';
+  }else{
+    html+='<div class="big'+(dir==="ko"?" zh":"")+'"></div><div class="hint" style="margin-top:8px"></div>';
+  }
+  html+=(game&&!flipped&&dir==="zh"?'':'<button class="spk" id="spk">🔊 發音</button>')+'</div>';
+  html+='<div class="ans"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" lang="'+(dir==="zh"?"ko":"zh-Hant")+'" placeholder="'+(dir==="zh"?"在這裡打韓文…":"在這裡打中文意思…")+'"'+(flipped?" disabled":"")+'><button class="sm" id="chk"'+(flipped?" disabled":"")+'>檢查</button></div><div class="res" id="res"></div>';
+  html+='<div class="act"><button class="nx" id="bnx" '+(flipped?"":"disabled")+'>下一張 ➜</button></div>';
+  st.innerHTML=html;
+  var big=st.querySelector(".big");
+  big.textContent=flipped?back:front;
+  if(flipped){st.querySelector(".hint").textContent=dir==="zh"?"":"韓文："+cur.ko}
+  $("#card").onclick=function(e){if(e.target.id==="spk"||flipped||game)return;if(checked===null)record(false);flipped=true;renderReview();}
+  var spb=$("#spk");if(spb)spb.onclick=function(e){e.stopPropagation();speak(cur.ko)};
+  var ai=$("#ans");ai.value=typed;
+  ai.onkeydown=function(e){if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();checkAns()}};
+  $("#chk").onclick=checkAns;
+  if(flipped&&checked!==null){var rs=$("#res");rs.className="res "+(checked?"good":"bad");rs.textContent=checked?"✅ 正確！":"❌ 不太對，正確答案在上面卡片"}
+  if(!flipped&&window.matchMedia&&matchMedia("(hover:hover)").matches)ai.focus();
+  $("#bnx").onclick=next;
+  
+}
+function record(ok){
+  cur.ok=(cur.ok||0)+(ok?1:0);cur.no=(cur.no||0)+(ok?0:1);
+  cur.streak=ok?(cur.streak||0)+1:0;
+  if(game){gN++;if(ok){gOk++;gS++;if(gS>gBest)gBest=gS}else gS=0}
+  cur.h=cur.h||[];cur.h.push([Date.now(),ok?1:0,dir==="zh"?0:1]);
+  if(cur.h.length>30)cur.h=cur.h.slice(-30);
+  save();
+}
+function advance(){flipped=false;resetAns();cur=pick();renderReview()}
+function next(){
+  if(!flipped)return;
+  advance();
+}
+function setMode(m){
+  mode=m;cur=null;flipped=false;resetAns();
+  document.querySelectorAll("[data-m]").forEach(function(b){b.classList.toggle("on",b.dataset.m===m)});
+  renderReview();
+}
+document.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){
+  pref=b.dataset.d;flipped=false;resetAns();
+  document.querySelectorAll("[data-d]").forEach(function(x){x.classList.toggle("on",x===b)});
+  renderReview();}});
+document.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){setMode(b.dataset.m)}});
+
+/* ---- list ---- */
+function renderList(){
+  var el=$("#list");
+  if(!words.length){el.innerHTML='<div class="empty">還沒有單字。</div>';return}
+  el.innerHTML='<div class="sec" id="rows"></div>';
+  var rows=$("#rows");
+  words.forEach(function(w){
+    var r=document.createElement("div");r.className="row";
+    r.innerHTML='<button class="ib" title="發音">🔊</button><div class="w"><div class="k"></div><div class="z"></div></div><div class="s"></div><button class="ib" title="修改標籤">✏️</button><button class="ib" title="刪除">🗑️</button>';
+    r.querySelector(".k").textContent=w.ko;
+    r.querySelector(".z").textContent=w.zh+" · "+tagStr(w);
+    r.querySelector(".s").textContent=w.streak>=2?"✅ 已熟":(w.ok+w.no?"✓"+w.ok+" ✗"+w.no:"新");
+    var b=r.querySelectorAll("button");
+    b[0].onclick=function(){speak(w.ko)};
+    b[1].onclick=function(){ask("修改標籤（"+w.zh+"），多個標籤用空格分開",true,tagsOf(w).map(function(t){return "#"+t}).join(" ")).then(function(c){if(c!==null){w.tags=parseTags(c);delete w.cat;save();render()}})};
+    b[2].onclick=function(){
+      ask("刪除「"+w.zh+" / "+w.ko+"」？").then(function(ok){if(ok){words=words.filter(function(x){return x.id!==w.id});save();render()}});
+    };
+    rows.appendChild(r);
+  });
+}
+
+/* ---- add ---- */
+var lastField="zh";
+$("#azh").oninput=function(){lastField="zh"};
+$("#ako").oninput=function(){lastField="ko"};
+$("#trbtn").onclick=async function(){
+  var btn=this,m=$("#addmsg");
+  var zh=$("#azh").value.trim(),ko=$("#ako").value.trim(),from;
+  if(zh&&!ko)from="zh";else if(ko&&!zh)from="ko";else if(zh&&ko)from=lastField;
+  else{m.textContent="請先輸入中文或韓文其中一格。";return}
+  var src=from==="zh"?zh:ko;
+  btn.disabled=true;m.textContent="翻譯中…";
+  try{
+    var sample=cfg.gem?1:null;
+    if(!sample){m.textContent="請先到「設定」貼上 Gemini 金鑰，才能自動翻譯。";return}
+    var task=from==="zh"?"把下面的中文翻成自然的韓文（詞彙請用韓國人常用說法；若是人名、品牌名，請用韓國常見的音譯或標準寫法）":"把下面的韓文翻成繁體中文（若是人名、品牌名，請給對應的中文或常見寫法）";
+    var out=await ai(task+"。只回傳翻譯結果本身，不要解釋、括號說明或引號。\n\n"+src);
+    var t=(out||"").trim().split("\n")[0].replace(/^["「『\s]+|["」』\s]+$/g,"");
+    if(!t){m.textContent="沒有取得翻譯，請再試一次。";return}
+    if(from==="zh"){$("#ako").value=t;speak(t)}else{$("#azh").value=t;speak(src)}
+    m.textContent="✅ 已翻譯，可以先修改，再按「加入單字」。";
+  }catch(e){
+    m.textContent=(e&&e.code==="not_granted")?"需要允許使用翻譯功能才能自動翻譯。":(e&&e.code==="rate_limited")?"翻譯太頻繁，請稍後再試。":"翻譯失敗，請檢查「設定」裡的金鑰與模型名稱，或手動輸入。";
+  }finally{btn.disabled=false}
+};
+$("#addbtn").onclick=async function(){
+  var zh=$("#azh").value,ko=$("#ako").value,cat=$("#acat").value.trim();
+  if(!zh.trim()||!ko.trim()){$("#addmsg").textContent="請兩欄都填。";return}
+  var b=$("#addbtn"),auto=!cat;b.disabled=true;
+  if(auto){$("#addmsg").textContent="自動分類中…";cat=(await classify([{zh:zh,ko:ko}]))[0]}
+  b.disabled=false;
+  var nw=mk(zh,ko,cat);words.push(nw);save();
+  $("#azh").value="";$("#ako").value="";$("#acat").value="";$("#azh").focus();
+  $("#addmsg").textContent="✅ 已加入 "+tagStr(nw)+(auto?"（自動標籤）":"")+"，共 "+words.length+" 個";
+  speak(ko);render();
+};
+$("#bulkbtn").onclick=async function(){
+  var rows=[],b=this,msg=$("#addmsg");
+  $("#bulk").value.split(/\n/).forEach(function(l){
+    var m=l.split(/[,，\t]/).map(function(s){return s.trim()});
+    if(m.length>=2&&m[0]&&m[1])rows.push({zh:m[0],ko:m[1],cat:m[2]||""});
+  });
+  if(!rows.length){msg.textContent="沒有讀到有效的行，格式：中文,韓文,類別";return}
+  b.disabled=true;
+  var need=rows.filter(function(r){return !r.cat});
+  if(need.length){msg.textContent="自動分類中…";var cs=await classify(need);need.forEach(function(r,i){r.cat=cs[i]})}
+  rows.forEach(function(r){words.push(mk(r.zh,r.ko,r.cat))});
+  save();$("#bulk").value="";b.disabled=false;render();
+  msg.textContent="✅ 已批次加入 "+rows.length+" 個單字（共 "+words.length+" 個）";
+};
+$("#reset").onclick=function(){
+  ask("把所有單字的學習進度歸零？（單字本身不會刪除）").then(function(ok){
+    if(!ok)return;
+    words.forEach(function(w){w.ok=0;w.no=0;w.streak=0});save();cur=null;render();
+  });
+};
+
+/* ---- nav ---- */
+document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){
+  document.querySelectorAll("#nav button").forEach(function(x){x.classList.toggle("on",x===b)});
+  ["review","list","add","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
+  render();
+}});
+function ask(msg,withInput,val){
+  return new Promise(function(res){
+    var ov=document.createElement("div");ov.className="ov";
+    ov.innerHTML='<div class="dlg"><p></p>'+(withInput?'<input autocomplete="off" placeholder="#標籤1 #標籤2">':'')+'<div class="btns"><button class="no">取消</button><button class="go">確定</button></div></div>';
+    ov.querySelector("p").textContent=msg;
+    var inp=ov.querySelector("input");if(inp)inp.value=val||"";
+    function done(v){ov.remove();res(v)}
+    ov.querySelector(".no").onclick=function(){done(null)};
+    ov.querySelector(".go").onclick=function(){done(inp?inp.value:true)};
+    ov.onclick=function(e){if(e.target===ov)done(null)};
+    if(inp)inp.onkeydown=function(e){if(e.key==="Enter"&&!e.isComposing)done(inp.value);if(e.key==="Escape")done(null)};
+    document.body.appendChild(ov);if(inp)inp.focus();
+  });
+}
+function renderCatSel(){
+  var map={};var none=0;words.forEach(function(w){var a=tagsOf(w);if(!a.length)none++;a.forEach(function(t){map[t]=(map[t]||0)+1})});
+  var names=Object.keys(map).sort();
+  if(catf!=="all"&&!(catf==="__none"?none:map[catf])){catf="all";cur=null;flipped=false;resetAns()}
+  var s=$("#catsel");s.innerHTML="";
+  var o=document.createElement("option");o.value="all";o.textContent="全部標籤（"+words.length+"）";s.appendChild(o);
+  names.forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent="#"+c+"（"+map[c]+"）";s.appendChild(o)});
+  if(none){var o2=document.createElement("option");o2.value="__none";o2.textContent="（無標籤）（"+none+"）";s.appendChild(o2)}
+  s.value=catf;
+  var sg=$("#tagsug");sg.innerHTML="";
+  names.forEach(function(t){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent="#"+t;b.onclick=function(){var i=$("#acat"),cv=i.value.trim();if(parseTags(cv).indexOf(t)<0)i.value=(cv?cv+" ":"")+"#"+t};sg.appendChild(b)});
+}
+$("#catsel").onchange=function(){catf=this.value;cur=null;flipped=false;resetAns();renderReview()};
+async function classify(items){
+  var none=items.map(function(){return []});
+  try{
+    var sample=cfg.gem?1:null;
+    if(!sample)return none;
+    var ex={};words.forEach(function(w){tagsOf(w).forEach(function(t){ex[t]=1})});
+    var p="你是韓文單字本的標籤助手。同一個單字可以屬於多個類別，請替下列每個單字指定 1 到 3 個簡短的繁體中文標籤（每個 2 到 4 個字，不含 #，例如：人名、地名、品牌、食物、動物、交通、職業、身體、情緒、日常用語、動詞、形容詞、時間）。請盡量沿用已存在的標籤："+JSON.stringify(Object.keys(ex))+"。只回傳 JSON 二維陣列（每個單字對應一個標籤字串陣列），長度必須等於單字數量，順序一一對應，不要任何其他文字。\n單字："+JSON.stringify(items.map(function(i){return i.zh+" / "+i.ko}));
+    var out=await ai(p);
+    var m=(out||"").match(/\[[\s\S]*\]/);
+    var arr=JSON.parse(m[0]);
+    return items.map(function(_,i){return parseTags(arr[i])});
+  }catch(e){return none}
+}
+$("#tidy").onclick=async function(){
+  var b=this,m=$("#tidymsg");
+  var t=words.filter(function(w){return !tagsOf(w).length});
+  if(!t.length){m.textContent="沒有無標籤的單字。";return}
+  b.disabled=true;m.textContent="自動分類中…";
+  var done=0;
+  for(var i=0;i<t.length;i+=40){
+    var chunk=t.slice(i,i+40),cs=await classify(chunk);
+    chunk.forEach(function(w,j){if(cs[j].length){w.tags=cs[j];delete w.cat;done++}});
+  }
+  save();render();b.disabled=false;
+  m.textContent=done?"✅ 已整理 "+done+" 個單字。":"自動分類失敗，請稍後再試。";
+};
+document.addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&!e.repeat&&!e.isComposing&&flipped&&!$("#review").hidden&&!document.querySelector(".ov")&&e.target.tagName!=="BUTTON"){e.preventDefault();next()}
+});
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var aiText='';
+function pct(a,b){return b?Math.round(a/b*100):null}
+function rowBar(label,ok,n){
+  var p=pct(ok,n);
+  return '<div class="rb"><div class="rl"><span>'+label+'</span><span>'+(p===null?'尚無資料':p+'%（'+ok+'/'+n+'）')+'</span></div><div class="pb"><i style="width:'+(p||0)+'%;background:var(--ac)"></i></div></div>';
+}
+function collectStats(){
+  var S={total:words.length,mast:0,learn:0,fresh:0,ok:0,no:0,days:[],dir:[{n:0,ok:0},{n:0,ok:0}],tags:{},weak:[]};
+  var now=new Date();
+  for(var i=6;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);S.days.push({t:d.getTime(),l:(d.getMonth()+1)+'/'+d.getDate(),n:0,ok:0})}
+  words.forEach(function(w){
+    var o=w.ok||0,n=w.no||0;S.ok+=o;S.no+=n;
+    if(!o&&!n)S.fresh++;else if(w.streak>=2)S.mast++;else S.learn++;
+    tagsOf(w).forEach(function(t){var x=S.tags[t]||(S.tags[t]={ok:0,no:0});x.ok+=o;x.no+=n});
+    if(n>0&&(w.streak||0)<2)S.weak.push(w);
+    (w.h||[]).forEach(function(r){
+      var di=r[2]?1:0;S.dir[di].n++;S.dir[di].ok+=r[1];
+      for(var j=6;j>=0;j--){if(r[0]>=S.days[j].t){S.days[j].n++;S.days[j].ok+=r[1];break}}
+    });
+  });
+  S.weak.sort(function(a,b){return ((b.no||0)-(b.ok||0)*0.5)-((a.no||0)-(a.ok||0)*0.5)});
+  return S;
+}
+function renderStats(){
+  var el=$('#stats');
+  if(!words.length){el.innerHTML='<div class="empty">還沒有單字。</div>';return}
+  var S=collectStats(),tried=S.ok+S.no,acc=pct(S.ok,tried);
+  var h='<div class="grid">'+
+    '<div class="stat"><b>'+S.total+'</b><span>單字總數</span></div>'+
+    '<div class="stat"><b>'+(acc===null?'—':acc+'%')+'</b><span>整體正確率（'+tried+' 次作答）</span></div>'+
+    '<div class="stat"><b>'+S.mast+'</b><span>已熟悉（連對 2 次）</span></div>'+
+    '<div class="stat"><b>'+S.fresh+'</b><span>還沒練習過</span></div></div>';
+  h+='<div class="sec"><div class="h2">熟悉度分布</div><div class="pb"><i style="width:'+(S.mast/S.total*100)+'%;background:var(--ok)"></i><i style="width:'+(S.learn/S.total*100)+'%;background:var(--ac)"></i></div><div class="msg">🟢 已熟悉 '+S.mast+'　🔵 學習中 '+S.learn+'　⚪ 未練習 '+S.fresh+'</div></div>';
+  var mx=Math.max.apply(null,[1].concat(S.days.map(function(d){return d.n})));
+  h+='<div class="sec"><div class="h2">近 7 天練習量</div><div class="bars">'+S.days.map(function(d){return '<div class="c"><span>'+d.n+'</span><div class="b" style="height:'+(d.n/mx*70)+'%"></div><span>'+d.l+'</span></div>'}).join('')+'</div></div>';
+  var d0=S.dir[0],d1=S.dir[1];
+  h+='<div class="sec"><div class="h2">題型比較</div>'+rowBar('中 → 韓（打韓文）',d0.ok,d0.n)+rowBar('韓 → 中（打中文）',d1.ok,d1.n)+'</div>';
+  var tg=Object.keys(S.tags).map(function(t){var x=S.tags[t];return {t:t,ok:x.ok,n:x.ok+x.no}}).filter(function(x){return x.n>0}).sort(function(a,b){return a.ok/a.n-b.ok/b.n}).slice(0,8);
+  h+='<div class="sec"><div class="h2">各標籤正確率（由弱到強）</div>'+(tg.length?tg.map(function(x){return rowBar('#'+esc(x.t),x.ok,x.n)}).join(''):'<div class="msg">練習後這裡會出現資料。</div>')+'</div>';
+  var wk=S.weak.slice(0,6);
+  h+='<div class="sec"><div class="h2">最需要加強的單字</div>'+(wk.length?wk.map(function(w,i){return '<div class="row"><button class="ib" data-i="'+i+'">🔊</button><div class="w"><div class="k">'+esc(w.ko)+'</div><div class="z">'+esc(w.zh)+' · '+esc(tagStr(w))+'</div></div><div class="s">✓'+(w.ok||0)+' ✗'+(w.no||0)+'</div></div>'}).join(''):'<div class="msg">目前沒有答錯過的單字。</div>')+'</div>';
+  h+='<div class="sec"><button class="pri" id="aibtn" style="margin-top:0">✨ 請 AI 給我學習建議</button><div class="aibox" id="aibox"></div></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-i]').forEach(function(b){b.onclick=function(){speak(wk[+b.dataset.i].ko)}});
+  $('#aibox').textContent=aiText;
+  $('#aibtn').onclick=async function(){
+    var btn=this,box=$('#aibox');
+    btn.disabled=true;box.textContent='分析中…';
+    try{
+      var sample=cfg.gem?1:null;
+      if(!sample){box.textContent='請先到「設定」貼上 Gemini 金鑰，才能使用 AI 建議。';return}
+      var data={單字總數:S.total,已熟悉:S.mast,學習中:S.learn,未練習:S.fresh,整體正確率:acc,近七天作答次數:S.days.map(function(d){return d.l+':'+d.n}),題型正確率:{中到韓:pct(d0.ok,d0.n),韓到中:pct(d1.ok,d1.n)},標籤正確率:tg.map(function(x){return '#'+x.t+' '+pct(x.ok,x.n)+'%('+x.n+'次)'}),最弱單字:wk.map(function(w){return w.zh+'/'+w.ko+' 對'+(w.ok||0)+'錯'+(w.no||0)})};
+      var p='你是一位親切的韓語學習教練。以下是學習者的單字卡統計（JSON）。請用繁體中文寫出簡短分析：1) 目前狀況（2 到 3 句） 2) 最需要加強的地方（點出具體單字或標籤） 3) 接下來一週的練習建議（最多 3 點）。全部不超過 250 字，語氣鼓勵但誠實，不要用 Markdown 符號，資料不足時請直接說明。\n\n'+JSON.stringify(data);
+      var out=await ai(p);
+      aiText=out||aiText;var b2=$('#aibox');if(b2)b2.textContent=aiText;
+    }catch(e){
+      box.textContent=(e&&e.code==='not_granted')?'需要允許才能使用 AI 建議。':'分析失敗，請稍後再試。';
+    }finally{btn.disabled=false}
+  };
+}
+function stopTimer(){if(timer){clearInterval(timer);timer=null}}
+function startTimer(){
+  stopTimer();lastT=Date.now();deadline=lastT+GT;
+  timer=setInterval(function(){
+    var now=Date.now();
+    if(!cur){stopTimer();return}
+    if($('#review').hidden||document.hidden){deadline+=now-lastT;lastT=now;return}
+    lastT=now;
+    var left=deadline-now,bar=$('#tbar'),num=$('#tnum');
+    if(bar)bar.style.width=Math.max(0,left/GT*100)+'%';
+    if(num)num.textContent='⏱ '+Math.max(0,Math.ceil(left/1000))+' 秒';
+    if(left<=0){stopTimer();tkey='';if(!flipped)record(false);advance()}
+  },100);
+}
+document.querySelectorAll('[data-g]').forEach(function(b){b.onclick=function(){
+  game=b.dataset.g==='game';gOk=0;gN=0;gS=0;gBest=0;
+  document.querySelectorAll('[data-g]').forEach(function(x){x.classList.toggle('on',x===b)});
+  cur=null;flipped=false;resetAns();renderReview();
+}});
+function render(){renderCatSel();renderReview();renderList();renderStats()}
+function updatePill(){
+  var t=$("#syncmsg").textContent,p=$("#syncpill");
+  p.textContent=t.indexOf("☁️ 已同步")===0?"☁️ 已同步":(t.indexOf("☁️ 連線")===0||t.indexOf("☁️ 同步中")===0)?"⏳ 連線中":t.indexOf("⚠️")===0?"⚠️ 同步失敗":"💾 僅存本機";
+}
+new MutationObserver(updatePill).observe($("#syncmsg"),{childList:true,characterData:true,subtree:true});
+$("#syncpill").onclick=function(){ask($("#syncmsg").textContent||"尚未連線")};
+$("#stoken").value=cfg.token||"";$("#sgist").value=cfg.gist||"";$("#sgem").value=cfg.gem||"";$("#smodel").value=cfg.model||"";
+$("#ssave").onclick=async function(){
+  var b=this,prev=cfg.gist||"";
+  cfg.token=$("#stoken").value.trim();cfg.gist=$("#sgist").value.trim();saveCfg();
+  if(cfg.gist!==prev)markSynced(false);
+  b.disabled=true;$("#sstat").textContent="連線中…";
+  await connect();
+  $("#sgist").value=cfg.gist||"";b.disabled=false;
+  $("#sstat").textContent=$("#syncmsg").textContent+(cfg.gist?"　Gist ID 已填入，其他裝置請貼上同一個。":"");
+};
+$("#gsave").onclick=function(){
+  cfg.gem=$("#sgem").value.trim();cfg.model=$("#smodel").value.trim();saveCfg();
+  $("#gstat").textContent=cfg.gem?"✅ 已儲存，可以到「新增」使用自動翻譯。":"已清除金鑰。";
+};
+$("#exp").onclick=function(){
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify({words:words},null,1)],{type:"application/json"}));
+  a.download="korean-flashcards.json";document.body.appendChild(a);a.click();a.remove();
+};
+$("#impbtn").onclick=function(){$("#impf").click()};
+$("#impf").onchange=function(){
+  var f=this.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var d=JSON.parse(rd.result),arr=Array.isArray(d)?d:d.words,n=0,have={};
+      words.forEach(function(w){have[key(w)]=1});
+      arr.forEach(function(w){if(w&&w.zh&&w.ko&&!have[key(w)]){var x=mk(w.zh,w.ko,w.tags||w.cat);x.ok=w.ok||0;x.no=w.no||0;x.streak=w.streak||0;words.push(x);have[key(w)]=1;n++}});
+      save();render();$("#bstat").textContent="✅ 匯入 "+n+" 個新單字。";
+    }catch(e){$("#bstat").textContent="讀不到這個檔案，請選擇之前匯出的 .json。"}
+  };
+  rd.readAsText(f);this.value="";
+};
+init();
+})();
+</script>
+</body>
+</html>
