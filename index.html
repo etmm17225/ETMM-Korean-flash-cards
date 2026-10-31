@@ -79,6 +79,31 @@ select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);bac
 .orow:last-child{margin-bottom:0}
 .ol{width:34px;flex:none;font-size:13px;color:var(--mu)}
 .orow select{flex:1;width:auto;padding:9px}
+.mv{display:flex;flex-direction:column;flex:none}
+.mvb{font-size:11px;padding:3px 6px;line-height:1}
+.mvb:disabled{opacity:.25}
+.dlg{max-height:90vh;overflow:auto}
+.dlg label{margin:8px 0 3px}
+.tb{display:flex;gap:8px;margin-bottom:12px}
+.tb button{flex:1;padding:12px 8px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:1px solid var(--bd);background:var(--sf);color:var(--tx)}
+.tb button.pri2{background:var(--ac);color:#fff;border-color:var(--ac)}
+[hidden]{display:none!important}
+.tb button{display:flex;align-items:center;justify-content:center;gap:6px}
+.flist{max-height:50vh;overflow:auto;margin-top:10px;border:1px solid var(--bd);border-radius:10px}
+.fi{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 14px;border:0;border-bottom:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:15px;cursor:pointer;text-align:left}
+.fi:last-child{border-bottom:0}
+.fi em{font-style:normal;color:var(--mu);font-size:13px}
+.fi.on{background:var(--ac2);color:var(--ac);font-weight:700}
+.tb button{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb button,.tb button.pri2{background:var(--sf);color:var(--tx);border:1px solid var(--bd)}
+.tb button.on,.tb button.pri2.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.tb{align-items:stretch}
+.tb button{height:44px;padding:0 8px;line-height:1.2;box-sizing:border-box}
+.tb button svg{flex:none}
+nav button{white-space:nowrap;padding:10px 4px}
+.st{flex:none;min-width:30px;text-align:center;font-size:20px;line-height:1}
+.st i{display:block;font-style:normal;font-size:11px;font-weight:700;line-height:1.35}
+.st i.g{color:var(--ok)}.st i.r{color:var(--no)}
 </style>
 </head>
 <body>
@@ -87,7 +112,6 @@ select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);bac
 <nav id="nav">
   <button data-t="review" class="on">複習</button>
   <button data-t="list">單字表</button>
-  <button data-t="add">新增</button>
   <button data-t="stats">分析</button>
   <button data-t="settings">設定</button>
 </nav>
@@ -117,10 +141,10 @@ select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);bac
   <div id="stage"></div>
 </section>
 
-<section id="list" hidden></section>
-
-<section id="add" hidden>
-  <div class="sec">
+<section id="list" hidden>
+  <div class="tb"><button class="pri2" id="addtoggle"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>新增</button><button id="ftoggle"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>篩選</button><button id="stoggle" title="排序"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg></button></div>
+  <div id="addpanel" hidden>
+<div class="sec">
     <label>中文 / 意思</label>
     <input id="azh" placeholder="例如：姜玗進" autocomplete="off">
     <label>韓文</label>
@@ -137,13 +161,11 @@ select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);bac
     <textarea id="bulk" placeholder="姜玗進,강우진&#10;FLARE U,플레어유"></textarea>
     <button class="pri" id="bulkbtn" style="background:var(--tx);color:var(--bg)">批次加入</button>
   </div>
-  <div class="sec">
-    <div class="msg" id="syncmsg"></div>
-    <button class="sm" id="tidy">🏷️ 自動為「無標籤」單字加標籤</button>
-    <div class="msg" id="tidymsg"></div>
-    <button class="sm" id="reset">重設學習進度</button>
-  </div>
+    </div>
+  <div id="listrows"></div>
 </section>
+
+
 <section id="stats" hidden></section>
 <section id="settings" hidden>
   <div class="sec">
@@ -173,6 +195,14 @@ select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);bac
     <input type="file" id="impf" accept=".json,application/json" hidden>
     <div class="msg" id="bstat"></div>
   </div>
+  <div class="h2" style="margin:4px 2px 10px">整理與重設</div>
+<div class="sec">
+    <div class="msg" id="syncmsg"></div>
+    <button class="sm" id="tidy">🏷️ 自動為「無標籤」單字加標籤</button>
+    <div class="msg" id="tidymsg"></div>
+    <button class="sm" id="reset">重設學習進度</button>
+  </div>
+
 </section>
 </main>
 
@@ -390,21 +420,125 @@ document.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){
 document.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){setMode(b.dataset.m)}});
 
 /* ---- list ---- */
+var lf="all";
+var IC={sort:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg>',plus:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',x:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',filter:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>'};
+var sk="manual";try{sk=localStorage.getItem(LS+"-sort")||"manual"}catch(e){}
+function wts(w){return parseInt(String(w.id).slice(0,-4),36)||0}
+var SORTS={
+  manual:{n:"自訂順序（可用 ▲▼ 調整）",s:"自訂"},
+  newest:{n:"最新加入",s:"最新",f:function(a,b){return wts(b)-wts(a)}},
+  oldest:{n:"最早加入",s:"最早",f:function(a,b){return wts(a)-wts(b)}},
+  zh:{n:"中文順序",s:"中文",f:function(a,b){return a.zh.localeCompare(b.zh,"zh-Hant")}},
+  ko:{n:"韓文順序（가나다）",s:"韓文",f:function(a,b){return a.ko.localeCompare(b.ko,"ko")}},
+  weak:{n:"最需加強（錯多的在前）",s:"需加強",f:function(a,b){return ((b.no||0)-(b.ok||0)*0.5)-((a.no||0)-(a.ok||0)*0.5)}},
+  least:{n:"最少練習",s:"少練習",f:function(a,b){return ((a.ok||0)+(a.no||0))-((b.ok||0)+(b.no||0))}}
+};
+if(!SORTS[sk])sk="manual";
+function visIdx(){
+  var o=[];words.forEach(function(w,i){if(lf==="all"||hasTag(w,lf))o.push(i)});
+  var f=SORTS[sk].f;
+  if(f)o.sort(function(x,y){return f(words[x],words[y])||x-y});
+  return o;
+}
+function move(i,d){
+  var vis=visIdx(),p=vis.indexOf(i),j=vis[p+d];
+  if(j===undefined)return;
+  var t=words[i];words[i]=words[j];words[j]=t;
+  save();render();
+}
+$("#addtoggle").onclick=function(){
+  var p=$("#addpanel");p.hidden=!p.hidden;
+  this.innerHTML=p.hidden?IC.plus+"新增":IC.x+"收起";this.classList.toggle("on",!p.hidden);
+  if(!p.hidden)$("#azh").focus();
+};
+function openFilter(){
+  var map={},none=0;
+  words.forEach(function(w){var a=tagsOf(w);if(!a.length)none++;a.forEach(function(t){map[t]=(map[t]||0)+1})});
+  var names=Object.keys(map).sort(function(a,b){return a.localeCompare(b,"zh-Hant")});
+  var ov=document.createElement("div");ov.className="ov";
+  ov.innerHTML='<div class="dlg"><p>篩選標籤</p><input id="fq" placeholder="搜尋標籤" autocomplete="off"><div class="flist" id="flist"></div><div class="btns"><button class="no">關閉</button></div></div>';
+  document.body.appendChild(ov);
+  var list=ov.querySelector("#flist"),fq=ov.querySelector("#fq");
+  function item(label,count,val){
+    var b=document.createElement("button");b.type="button";b.className="fi"+(lf===val?" on":"");
+    b.innerHTML="<span></span><em>"+count+"</em>";b.firstChild.textContent=label;
+    b.onclick=function(){lf=val;ov.remove();renderList()};
+    list.appendChild(b);
+  }
+  function draw(){
+    list.innerHTML="";
+    var q=fq.value.trim().replace(/^[#＃]/,"").toLowerCase(),n=0;
+    if(!q){item("全部",words.length,"all");if(none)item("無標籤",none,"__none")}
+    names.forEach(function(t){if(!q||t.toLowerCase().indexOf(q)>=0){item("#"+t,map[t],t);n++}});
+    if(q&&!n)list.innerHTML='<div class="msg" style="padding:12px">沒有符合的標籤</div>';
+  }
+  fq.oninput=draw;draw();
+  ov.querySelector(".no").onclick=function(){ov.remove()};
+  ov.onclick=function(e){if(e.target===ov)ov.remove()};
+  if(window.matchMedia&&matchMedia("(hover:hover)").matches)fq.focus();
+}
+$("#ftoggle").onclick=openFilter;
+function openSort(){
+  var ov=document.createElement("div");ov.className="ov";
+  ov.innerHTML='<div class="dlg"><p>排序方式</p><div class="flist"></div><div class="btns"><button class="no">關閉</button></div></div>';
+  document.body.appendChild(ov);
+  var list=ov.querySelector(".flist");
+  Object.keys(SORTS).forEach(function(k){
+    var b=document.createElement("button");b.type="button";b.className="fi"+(sk===k?" on":"");b.textContent=SORTS[k].n;
+    b.onclick=function(){sk=k;try{localStorage.setItem(LS+"-sort",k)}catch(e){}ov.remove();renderList()};
+    list.appendChild(b);
+  });
+  ov.querySelector(".no").onclick=function(){ov.remove()};
+  ov.onclick=function(e){if(e.target===ov)ov.remove()};
+}
+$("#stoggle").onclick=openSort;
+function editWord(w){
+  var i=words.indexOf(w),n=words.length;
+  var ov=document.createElement("div");ov.className="ov";
+  ov.innerHTML='<div class="dlg"><p>編輯單字</p><label>中文</label><input id="e1" autocomplete="off"><label>韓文</label><input id="e2" autocomplete="off" lang="ko"><label>#標籤（用空格分開）</label><input id="e3" autocomplete="off"><label>排列位置（1 到 '+n+'）</label><input id="e4" type="number" inputmode="numeric" min="1" max="'+n+'"><div class="msg" id="e5"></div><div class="btns"><button class="no">取消</button><button class="go">儲存</button></div></div>';
+  document.body.appendChild(ov);
+  var q=function(id){return ov.querySelector("#"+id)};
+  q("e1").value=w.zh;q("e2").value=w.ko;
+  q("e3").value=tagsOf(w).map(function(t){return "#"+t}).join(" ");
+  q("e4").value=i+1;
+  ov.querySelector(".no").onclick=function(){ov.remove()};
+  ov.onclick=function(e){if(e.target===ov)ov.remove()};
+  ov.querySelector(".go").onclick=function(){
+    var z=q("e1").value.trim(),k=q("e2").value.trim();
+    if(!z||!k){q("e5").textContent="中文和韓文都要填。";return}
+    w.zh=z;w.ko=k;w.tags=parseTags(q("e3").value);delete w.cat;
+    var p=parseInt(q("e4").value,10)-1;
+    if(p>=0&&p<words.length&&p!==i){words.splice(i,1);words.splice(p,0,w)}
+    save();render();ov.remove();
+  };
+}
 function renderList(){
-  var el=$("#list");
-  if(!words.length){el.innerHTML='<div class="empty">還沒有單字。</div>';return}
-  el.innerHTML='<div class="sec" id="rows"></div>';
+  var el=$("#listrows"),map={},none=0;
+  words.forEach(function(w){var a=tagsOf(w);if(!a.length)none++;a.forEach(function(t){map[t]=(map[t]||0)+1})});
+  if(lf!=="all"&&!(lf==="__none"?none:map[lf]))lf="all";
+  $("#ftoggle").innerHTML=IC.filter+"篩選";$("#ftoggle").classList.toggle("on",lf!=="all");
+  $("#stoggle").innerHTML=IC.sort+"排序";$("#stoggle").classList.toggle("on",sk!=="manual");
+  if(!words.length){el.innerHTML='<div class="empty">還沒有單字，點上面的「新增」。</div>';return}
+  var vis=visIdx();
+  el.innerHTML='<div class="msg">'+(lf==="all"?"":"篩選："+esc(lf==="__none"?"無標籤":"#"+lf)+"　·　")+'顯示 '+vis.length+' / '+words.length+' 個單字</div><div class="sec" id="rows"></div>';
   var rows=$("#rows");
-  words.forEach(function(w){
-    var r=document.createElement("div");r.className="row";
-    r.innerHTML='<button class="ib" title="發音">🔊</button><div class="w"><div class="k"></div><div class="z"></div></div><div class="s"></div><button class="ib" title="修改標籤">✏️</button><button class="ib" title="刪除">🗑️</button>';
+  vis.forEach(function(i,pos){
+    var w=words[i],r=document.createElement("div");r.className="row";
+    r.innerHTML='<button class="ib" title="發音">🔊</button><div class="w"><div class="k"></div><div class="z"></div></div><span class="st"></span><div class="mv"><button class="ib mvb" title="上移">▲</button><button class="ib mvb" title="下移">▼</button></div><button class="ib" title="編輯">✏️</button><button class="ib" title="刪除">🗑️</button>';
     r.querySelector(".k").textContent=w.ko;
     r.querySelector(".z").textContent=w.zh+" · "+tagStr(w);
-    r.querySelector(".s").textContent=w.streak>=2?"✅ 已熟":(w.ok+w.no?"✓"+w.ok+" ✗"+w.no:"新");
+    var st=r.querySelector(".st"),nn=(w.ok||0)+(w.no||0);
+    if(!nn){st.textContent="⭐";st.title="還沒練習過"}
+    else if(w.streak>=2){st.textContent="✅";st.title="已熟悉（答對 "+(w.ok||0)+" 次、答錯 "+(w.no||0)+" 次）"}
+    else{st.innerHTML='<i class="g">✓'+(w.ok||0)+'</i><i class="r">✗'+(w.no||0)+'</i>';st.title="答對 "+(w.ok||0)+" 次、答錯 "+(w.no||0)+" 次"}
     var b=r.querySelectorAll("button");
+    b[1].disabled=(pos===0);b[2].disabled=(pos===vis.length-1);
+    if(sk!=="manual")r.querySelector(".mv").style.display="none";
+    b[1].onclick=function(){move(i,-1)};
+    b[2].onclick=function(){move(i,1)};
     b[0].onclick=function(){speak(w.ko)};
-    b[1].onclick=function(){ask("修改標籤（"+w.zh+"），多個標籤用空格分開",true,tagsOf(w).map(function(t){return "#"+t}).join(" ")).then(function(c){if(c!==null){w.tags=parseTags(c);delete w.cat;save();render()}})};
-    b[2].onclick=function(){
+    b[3].onclick=function(){editWord(w)};
+    b[4].onclick=function(){
       ask("刪除「"+w.zh+" / "+w.ko+"」？").then(function(ok){if(ok){words=words.filter(function(x){return x.id!==w.id});save();render()}});
     };
     rows.appendChild(r);
@@ -470,7 +604,7 @@ $("#reset").onclick=function(){
 /* ---- nav ---- */
 document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){
   document.querySelectorAll("#nav button").forEach(function(x){x.classList.toggle("on",x===b)});
-  ["review","list","add","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
+  ["review","list","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
   render();
 }});
 function ask(msg,withInput,val){
@@ -628,7 +762,7 @@ $("#ssave").onclick=async function(){
 };
 $("#gsave").onclick=function(){
   cfg.gem=$("#sgem").value.trim();cfg.model=$("#smodel").value.trim();saveCfg();
-  $("#gstat").textContent=cfg.gem?"✅ 已儲存，可以到「新增」使用自動翻譯。":"已清除金鑰。";
+  $("#gstat").textContent=cfg.gem?"✅ 已儲存，可以到「單字表 → 新增」使用自動翻譯。":"已清除金鑰。";
 };
 $("#exp").onclick=function(){
   var a=document.createElement("a");
