@@ -104,6 +104,31 @@ nav button{white-space:nowrap;padding:10px 4px}
 .st{flex:none;min-width:30px;text-align:center;font-size:20px;line-height:1}
 .st i{display:block;font-style:normal;font-size:11px;font-weight:700;line-height:1.35}
 .st i.g{color:var(--ok)}.st i.r{color:var(--no)}
+.ib svg{display:block}
+.sg.big button{display:flex;align-items:center;justify-content:center;gap:8px}
+.sg.big button[data-g=learn] svg{color:var(--ok)}
+.sg.big button[data-g=game] svg{color:#a855f7}
+.sg.big button.on svg{color:#fff}
+.opts4{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:14px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:20px;font-weight:700;text-align:left;cursor:pointer;font-family:inherit}
+.opt .kn{flex:none;width:24px;height:24px;border-radius:7px;background:var(--ac2);color:var(--ac);font-size:13px;display:flex;align-items:center;justify-content:center}
+.opt.good{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{background:var(--no);border-color:var(--no);color:#fff}
+.opt.good .kn,.opt.bad .kn{background:rgba(255,255,255,.28);color:#fff}
+.opt.dim{opacity:.45}
+.idk{width:100%;margin-top:10px;padding:12px}
+.osum{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:none;border:0;color:var(--tx);font-size:14px;font-weight:600;padding:2px 0;cursor:pointer;text-align:left;font-family:inherit}
+.osum svg{flex:none;color:var(--mu);transition:transform .2s}
+.opts:not(.collapsed) .osum svg{transform:rotate(180deg)}
+.opts.collapsed .orow{display:none}
+.opts.collapsed{padding:12px 14px}
+.opts:not(.collapsed) .osum{margin-bottom:12px}
+.cm .card{min-height:110px;padding:14px}
+.cm:not(.fl) .card .hint{display:none}
+.cm .card .hint{margin-top:6px}
+.cm .spk{margin-top:8px;padding:6px 14px}
+.cm .opts4{gap:8px;margin-top:10px}
+.opt{padding:12px 14px}
 </style>
 </head>
 <body>
@@ -118,10 +143,16 @@ nav button{white-space:nowrap;padding:10px 4px}
 
 <section id="review">
   <div class="sg big" id="modes">
-    <button class="on" data-g="learn">📖 學習</button>
-    <button data-g="game">🎮 遊戲</button>
+    <button class="on" data-g="learn"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5C4.5 4 8 4 12 6c4-2 7.5-2 10-.5V19c-2.5-1.5-6-1.5-10 .5-4-2-7.5-2-10-.5Z"/><path d="M12 6v13.5"/></svg>學習</button>
+    <button data-g="game"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10.5v4M5 12.5h4"/><path d="M16 11.5h.01M18.5 13.5h.01"/></svg>遊戲</button>
   </div>
-  <div class="sec opts">
+  <div class="sec opts collapsed" id="optsbox"><button class="osum" id="osum" type="button"><span id="osumt"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="orow"><span class="ol">作答</span>
+      <div class="sg">
+        <button data-a="choice">選擇</button>
+        <button data-a="type">打字</button>
+      </div>
+    </div>
     <div class="orow"><span class="ol">題型</span>
       <div class="sg">
         <button class="on" data-d="rand">隨機</button>
@@ -211,7 +242,31 @@ nav button{white-space:nowrap;padding:10px 4px}
 var SEED=[["姜玗進","강우진","人名"],["FLARE U","플레어유","品牌"],["崔立于","최립우","人名"]];
 var words=[],dir="zh",mode="all",cur=null,flipped=false,idx=0,queue=[],checked=null,typed="",pref="rand",rolledFor=null;
 var game=false,timer=null,deadline=0,lastT=0,tkey='',gOk=0,gN=0,gS=0,gBest=0,GT=10000,qn=0;
-function resetAns(){checked=null;typed="";rolledFor=null;qn++}
+function resetAns(){checked=null;typed="";rolledFor=null;qn++;picked=-1;opts=null}
+var ans="type";
+var picked=-1,opts=null,optsFor="",curGT=10000;
+function useChoice(){return ans==="choice"&&words.length>=2}
+function mkOpts(){
+  var key=qn+":"+cur.id;
+  if(opts&&optsFor===key)return;
+  optsFor=key;
+  var field=dir==="zh"?"ko":"zh",answer=cur[field],seen={},out=[{t:answer,c:true}];
+  seen[norm(answer)]=1;
+  var others=words.filter(function(w){return w.id!==cur.id});
+  for(var i=others.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=others[i];others[i]=others[j];others[j]=t}
+  for(var k=0;k<others.length&&out.length<4;k++){var tx=others[k][field];if(!seen[norm(tx)]){seen[norm(tx)]=1;out.push({t:tx,c:false})}}
+  for(var a=out.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),t2=out[a];out[a]=out[b];out[b]=t2}
+  opts=out;
+}
+function choiceActive(){if(!useChoice()||!cur)return false;mkOpts();return opts.length>=2}
+function pickOpt(i){
+  if(flipped||!cur||!opts||!opts[i])return;
+  picked=i;checked=opts[i].c;record(checked,"c");flipped=true;renderReview();speak(cur.ko);
+}
+function dontKnow(){
+  if(flipped||!cur)return;
+  picked=-2;checked=false;record(false,"c");flipped=true;renderReview();speak(cur.ko);
+}
 var catf="all";
 function parseTags(v){
   var a=Array.isArray(v)?v:String(v||"").split(/[\s,，、#＃]+/),out=[];
@@ -228,6 +283,7 @@ function checkAns(){
   typed=v;checked=norm(v)===norm(ans);record(checked);flipped=true;renderReview();speak(cur.ko);
 }
 var ref=null,usingDb=false,LS="kr-flash-v1";
+ans=(function(){var v=null;try{v=localStorage.getItem(LS+"-ans")}catch(e){}if(v==="choice"||v==="type")return v;return(window.matchMedia&&matchMedia("(hover:hover)").matches)?"choice":"type"})();
 var $=function(s){return document.querySelector(s)};
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function mk(zh,ko,cat){return {id:uid(),zh:zh.trim(),ko:ko.trim(),tags:parseTags(cat),ok:0,no:0,streak:0}}
@@ -360,6 +416,7 @@ function pick(){
   return p[0];
 }
 function renderReview(){
+  updateSum();
   if(!game){stopTimer();tkey=''}
   var st=$("#stage");
   var sc=scope(),known=sc.filter(function(w){return w.streak>=2}).length;
@@ -378,28 +435,46 @@ function renderReview(){
   }else{
     html+='<div class="big'+(dir==="ko"?" zh":"")+'"></div><div class="hint" style="margin-top:8px"></div>';
   }
-  html+=(game&&!flipped&&dir==="zh"?'':'<button class="spk" id="spk">🔊 發音</button>')+'</div>';
-  html+='<div class="ans"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" lang="'+(dir==="zh"?"ko":"zh-Hant")+'" placeholder="'+(dir==="zh"?"在這裡打韓文…":"在這裡打中文意思…")+'"'+(flipped?" disabled":"")+'><button class="sm" id="chk"'+(flipped?" disabled":"")+'>檢查</button></div><div class="res" id="res"></div>';
+  html+=((game||useChoice())&&!flipped&&dir==="zh"?'':'<button class="spk" id="spk">🔊 發音</button>')+'</div>';
+  var isChoice=choiceActive();
+  html+=isChoice?'<div class="opts4" id="opts4"></div><button class="sm idk" id="idk"'+(flipped?' disabled':'')+'>不知道</button><div class="res" id="res"></div>':'<div class="ans"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" lang="'+(dir==="zh"?"ko":"zh-Hant")+'" placeholder="'+(dir==="zh"?"在這裡打韓文…":"在這裡打中文意思…")+'"'+(flipped?" disabled":"")+'><button class="sm" id="chk"'+(flipped?" disabled":"")+'>檢查</button></div><div class="res" id="res"></div>';
   html+='<div class="act"><button class="nx" id="bnx" '+(flipped?"":"disabled")+'>下一張 ➜</button></div>';
   st.innerHTML=html;
+  st.classList.toggle("cm",isChoice);st.classList.toggle("fl",flipped);
   var big=st.querySelector(".big");
   big.textContent=flipped?back:front;
   if(flipped){st.querySelector(".hint").textContent=dir==="zh"?"":"韓文："+cur.ko}
   $("#card").onclick=function(e){if(e.target.id==="spk"||flipped||game)return;if(checked===null)record(false);flipped=true;renderReview();}
   var spb=$("#spk");if(spb)spb.onclick=function(e){e.stopPropagation();speak(cur.ko)};
+  if(isChoice){
+    var box=$("#opts4"),lg=dir==="zh"?"ko":"zh-Hant";
+    opts.forEach(function(o,n){
+      var bt=document.createElement("button");bt.type="button";bt.className="opt";
+      var kn=document.createElement("span");kn.className="kn";kn.textContent=n+1;
+      var tx=document.createElement("span");tx.textContent=o.t;tx.lang=lg;
+      bt.appendChild(kn);bt.appendChild(tx);
+      if(flipped){bt.disabled=true;bt.classList.add(o.c?"good":(n===picked?"bad":"dim"))}
+      else bt.onclick=function(){pickOpt(n)};
+      box.appendChild(bt);
+    });
+    $("#idk").onclick=dontKnow;
+    if(flipped&&checked!==null){var rs2=$("#res");rs2.className="res "+(checked?"good":"bad");rs2.textContent=checked?"✅ 正確！":(picked===-2?"答案是綠色那個":"❌ 答錯了，正確答案是綠色那個")}
+  }else{
   var ai=$("#ans");ai.value=typed;
   ai.onkeydown=function(e){if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();checkAns()}};
   $("#chk").onclick=checkAns;
   if(flipped&&checked!==null){var rs=$("#res");rs.className="res "+(checked?"good":"bad");rs.textContent=checked?"✅ 正確！":"❌ 不太對，正確答案在上面卡片"}
   if(!flipped&&window.matchMedia&&matchMedia("(hover:hover)").matches)ai.focus();
+  }
   $("#bnx").onclick=next;
   
 }
-function record(ok){
+function record(ok,how){
+  how=how||(choiceActive()?"c":"t");
   cur.ok=(cur.ok||0)+(ok?1:0);cur.no=(cur.no||0)+(ok?0:1);
-  cur.streak=ok?(cur.streak||0)+1:0;
+  cur.streak=ok?Math.round(((cur.streak||0)+(how==="c"?0.67:1))*100)/100:0;
   if(game){gN++;if(ok){gOk++;gS++;if(gS>gBest)gBest=gS}else gS=0}
-  cur.h=cur.h||[];cur.h.push([Date.now(),ok?1:0,dir==="zh"?0:1]);
+  cur.h=cur.h||[];cur.h.push([Date.now(),ok?1:0,dir==="zh"?0:1,how==="c"?1:0]);
   if(cur.h.length>30)cur.h=cur.h.slice(-30);
   save();
 }
@@ -421,7 +496,7 @@ document.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){s
 
 /* ---- list ---- */
 var lf="all";
-var IC={sort:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg>',plus:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',x:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',filter:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>'};
+var IC={edit:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ac)"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',trash:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--no)"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',star:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#f5a623"><polygon points="12 2.5 15.1 8.6 21.8 9.6 16.9 14.3 18.1 21 12 17.8 5.9 21 7.1 14.3 2.2 9.6 8.9 8.6"/></svg>',done:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ok)"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',sort:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg>',plus:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',x:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',filter:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>'};
 var sk="manual";try{sk=localStorage.getItem(LS+"-sort")||"manual"}catch(e){}
 function wts(w){return parseInt(String(w.id).slice(0,-4),36)||0}
 var SORTS={
@@ -524,12 +599,12 @@ function renderList(){
   var rows=$("#rows");
   vis.forEach(function(i,pos){
     var w=words[i],r=document.createElement("div");r.className="row";
-    r.innerHTML='<button class="ib" title="發音">🔊</button><div class="w"><div class="k"></div><div class="z"></div></div><span class="st"></span><div class="mv"><button class="ib mvb" title="上移">▲</button><button class="ib mvb" title="下移">▼</button></div><button class="ib" title="編輯">✏️</button><button class="ib" title="刪除">🗑️</button>';
+    r.innerHTML='<button class="ib" title="發音">🔊</button><div class="w"><div class="k"></div><div class="z"></div></div><span class="st"></span><div class="mv"><button class="ib mvb" title="上移">▲</button><button class="ib mvb" title="下移">▼</button></div><button class="ib" title="編輯">'+IC.edit+'</button><button class="ib" title="刪除">'+IC.trash+'</button>';
     r.querySelector(".k").textContent=w.ko;
     r.querySelector(".z").textContent=w.zh+" · "+tagStr(w);
     var st=r.querySelector(".st"),nn=(w.ok||0)+(w.no||0);
-    if(!nn){st.textContent="⭐";st.title="還沒練習過"}
-    else if(w.streak>=2){st.textContent="✅";st.title="已熟悉（答對 "+(w.ok||0)+" 次、答錯 "+(w.no||0)+" 次）"}
+    if(!nn){st.innerHTML=IC.star;st.title="還沒練習過"}
+    else if(w.streak>=2){st.innerHTML=IC.done;st.title="已熟悉（答對 "+(w.ok||0)+" 次、答錯 "+(w.no||0)+" 次）"}
     else{st.innerHTML='<i class="g">✓'+(w.ok||0)+'</i><i class="r">✗'+(w.no||0)+'</i>';st.title="答對 "+(w.ok||0)+" 次、答錯 "+(w.no||0)+" 次"}
     var b=r.querySelectorAll("button");
     b[1].disabled=(pos===0);b[2].disabled=(pos===vis.length-1);
@@ -662,6 +737,9 @@ $("#tidy").onclick=async function(){
 };
 document.addEventListener("keydown",function(e){
   if(e.key==="Enter"&&!e.repeat&&!e.isComposing&&flipped&&!$("#review").hidden&&!document.querySelector(".ov")&&e.target.tagName!=="BUTTON"){e.preventDefault();next()}
+  if(/^[1-4]$/.test(e.key)&&!e.repeat&&!flipped&&cur&&opts&&optsFor===qn+":"+cur.id&&useChoice()&&!$("#review").hidden&&!document.querySelector(".ov")&&!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
+    var n4=+e.key-1;if(opts[n4]){e.preventDefault();pickOpt(n4)}
+  }
 });
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 var aiText='';
@@ -671,7 +749,7 @@ function rowBar(label,ok,n){
   return '<div class="rb"><div class="rl"><span>'+label+'</span><span>'+(p===null?'尚無資料':p+'%（'+ok+'/'+n+'）')+'</span></div><div class="pb"><i style="width:'+(p||0)+'%;background:var(--ac)"></i></div></div>';
 }
 function collectStats(){
-  var S={total:words.length,mast:0,learn:0,fresh:0,ok:0,no:0,days:[],dir:[{n:0,ok:0},{n:0,ok:0}],tags:{},weak:[]};
+  var S={total:words.length,mast:0,learn:0,fresh:0,ok:0,no:0,days:[],dir:[{n:0,ok:0},{n:0,ok:0}],tags:{},weak:[],how:[{n:0,ok:0},{n:0,ok:0}]};
   var now=new Date();
   for(var i=6;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);S.days.push({t:d.getTime(),l:(d.getMonth()+1)+'/'+d.getDate(),n:0,ok:0})}
   words.forEach(function(w){
@@ -680,7 +758,7 @@ function collectStats(){
     tagsOf(w).forEach(function(t){var x=S.tags[t]||(S.tags[t]={ok:0,no:0});x.ok+=o;x.no+=n});
     if(n>0&&(w.streak||0)<2)S.weak.push(w);
     (w.h||[]).forEach(function(r){
-      var di=r[2]?1:0;S.dir[di].n++;S.dir[di].ok+=r[1];
+      var di=r[2]?1:0;S.dir[di].n++;S.dir[di].ok+=r[1];var hi=r[3]?1:0;S.how[hi].n++;S.how[hi].ok+=r[1];
       for(var j=6;j>=0;j--){if(r[0]>=S.days[j].t){S.days[j].n++;S.days[j].ok+=r[1];break}}
     });
   });
@@ -694,13 +772,13 @@ function renderStats(){
   var h='<div class="grid">'+
     '<div class="stat"><b>'+S.total+'</b><span>單字總數</span></div>'+
     '<div class="stat"><b>'+(acc===null?'—':acc+'%')+'</b><span>整體正確率（'+tried+' 次作答）</span></div>'+
-    '<div class="stat"><b>'+S.mast+'</b><span>已熟悉（連對 2 次）</span></div>'+
+    '<div class="stat"><b>'+S.mast+'</b><span>已熟悉（打字連對 2 次，選擇連對 3 次）</span></div>'+
     '<div class="stat"><b>'+S.fresh+'</b><span>還沒練習過</span></div></div>';
   h+='<div class="sec"><div class="h2">熟悉度分布</div><div class="pb"><i style="width:'+(S.mast/S.total*100)+'%;background:var(--ok)"></i><i style="width:'+(S.learn/S.total*100)+'%;background:var(--ac)"></i></div><div class="msg">🟢 已熟悉 '+S.mast+'　🔵 學習中 '+S.learn+'　⚪ 未練習 '+S.fresh+'</div></div>';
   var mx=Math.max.apply(null,[1].concat(S.days.map(function(d){return d.n})));
   h+='<div class="sec"><div class="h2">近 7 天練習量</div><div class="bars">'+S.days.map(function(d){return '<div class="c"><span>'+d.n+'</span><div class="b" style="height:'+(d.n/mx*70)+'%"></div><span>'+d.l+'</span></div>'}).join('')+'</div></div>';
   var d0=S.dir[0],d1=S.dir[1];
-  h+='<div class="sec"><div class="h2">題型比較</div>'+rowBar('中 → 韓（打韓文）',d0.ok,d0.n)+rowBar('韓 → 中（打中文）',d1.ok,d1.n)+'</div>';
+  h+='<div class="sec"><div class="h2">題型比較</div>'+rowBar('中 → 韓',d0.ok,d0.n)+rowBar('韓 → 中',d1.ok,d1.n)+'</div><div class="sec"><div class="h2">作答方式比較</div>'+rowBar('選擇',S.how[1].ok,S.how[1].n)+rowBar('打字',S.how[0].ok,S.how[0].n)+'</div>';
   var tg=Object.keys(S.tags).map(function(t){var x=S.tags[t];return {t:t,ok:x.ok,n:x.ok+x.no}}).filter(function(x){return x.n>0}).sort(function(a,b){return a.ok/a.n-b.ok/b.n}).slice(0,8);
   h+='<div class="sec"><div class="h2">各標籤正確率（由弱到強）</div>'+(tg.length?tg.map(function(x){return rowBar('#'+esc(x.t),x.ok,x.n)}).join(''):'<div class="msg">練習後這裡會出現資料。</div>')+'</div>';
   var wk=S.weak.slice(0,6);
@@ -726,14 +804,14 @@ function renderStats(){
 }
 function stopTimer(){if(timer){clearInterval(timer);timer=null}}
 function startTimer(){
-  stopTimer();lastT=Date.now();deadline=lastT+GT;
+  stopTimer();lastT=Date.now();curGT=(flipped&&choiceActive())?3000:GT;deadline=lastT+curGT;
   timer=setInterval(function(){
     var now=Date.now();
     if(!cur){stopTimer();return}
     if($('#review').hidden||document.hidden){deadline+=now-lastT;lastT=now;return}
     lastT=now;
     var left=deadline-now,bar=$('#tbar'),num=$('#tnum');
-    if(bar)bar.style.width=Math.max(0,left/GT*100)+'%';
+    if(bar)bar.style.width=Math.max(0,left/curGT*100)+'%';
     if(num)num.textContent='⏱ '+Math.max(0,Math.ceil(left/1000))+' 秒';
     if(left<=0){stopTimer();tkey='';if(!flipped)record(false);advance()}
   },100);
@@ -743,6 +821,23 @@ document.querySelectorAll('[data-g]').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('[data-g]').forEach(function(x){x.classList.toggle('on',x===b)});
   cur=null;flipped=false;resetAns();renderReview();
 }});
+function updateSum(){
+  $("#osumt").textContent=[ans==="choice"?"選擇":"打字",pref==="rand"?"隨機":(pref==="zh"?"中 → 韓":"韓 → 中"),mode==="weak"?"只練不熟的":"全部單字",catf==="all"?"全部標籤":(catf==="__none"?"無標籤":"#"+catf)].join(" · ");
+}
+(function(){
+  var open=false;try{open=localStorage.getItem(LS+"-osum")==="1"}catch(e){}
+  $("#optsbox").classList.toggle("collapsed",!open);
+  $("#osum").onclick=function(){
+    var c=$("#optsbox").classList.toggle("collapsed");
+    try{localStorage.setItem(LS+"-osum",c?"0":"1")}catch(e){}
+  };
+})();
+function syncAns(){document.querySelectorAll("[data-a]").forEach(function(b){b.classList.toggle("on",b.dataset.a===ans)})}
+document.querySelectorAll("[data-a]").forEach(function(b){b.onclick=function(){
+  ans=b.dataset.a;try{localStorage.setItem(LS+"-ans",ans)}catch(e){}
+  syncAns();cur=null;flipped=false;resetAns();renderReview();
+}});
+syncAns();
 function render(){renderCatSel();renderReview();renderList();renderStats()}
 function updatePill(){
   var t=$("#syncmsg").textContent,p=$("#syncpill");
