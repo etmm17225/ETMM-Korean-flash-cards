@@ -116,7 +116,6 @@ nav button{white-space:nowrap;padding:10px 4px}
 .opt.bad{background:var(--no);border-color:var(--no);color:#fff}
 .opt.good .kn,.opt.bad .kn{background:rgba(255,255,255,.28);color:#fff}
 .opt.dim{opacity:.45}
-.idk{width:100%;margin-top:10px;padding:12px}
 .osum{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:none;border:0;color:var(--tx);font-size:14px;font-weight:600;padding:2px 0;cursor:pointer;text-align:left;font-family:inherit}
 .osum svg{flex:none;color:var(--mu);transition:transform .2s}
 .opts:not(.collapsed) .osum svg{transform:rotate(180deg)}
@@ -129,6 +128,11 @@ nav button{white-space:nowrap;padding:10px 4px}
 .cm .spk{margin-top:8px;padding:6px 14px}
 .cm .opts4{gap:8px;margin-top:10px}
 .opt{padding:12px 14px}
+.opt .tag{margin-left:10px;font-size:13px;font-weight:700;padding:2px 9px;border-radius:999px;background:rgba(255,255,255,.28);color:#fff;white-space:nowrap}
+.opt.dk{color:var(--tx);font-weight:600;border-style:dashed}
+.opt.dk.dim{opacity:.6}
+.opt.dk.sel{opacity:1}
+@media (hover:none){.opt .kn{display:none}}
 </style>
 </head>
 <body>
@@ -254,7 +258,7 @@ function mkOpts(){
   seen[norm(answer)]=1;
   var others=words.filter(function(w){return w.id!==cur.id});
   for(var i=others.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=others[i];others[i]=others[j];others[j]=t}
-  for(var k=0;k<others.length&&out.length<4;k++){var tx=others[k][field];if(!seen[norm(tx)]){seen[norm(tx)]=1;out.push({t:tx,c:false})}}
+  for(var k=0;k<others.length&&out.length<3;k++){var tx=others[k][field];if(!seen[norm(tx)]){seen[norm(tx)]=1;out.push({t:tx,c:false})}}
   for(var a=out.length-1;a>0;a--){var b=Math.floor(Math.random()*(a+1)),t2=out[a];out[a]=out[b];out[b]=t2}
   opts=out;
 }
@@ -437,8 +441,8 @@ function renderReview(){
   }
   html+=((game||useChoice())&&!flipped&&dir==="zh"?'':'<button class="spk" id="spk">🔊 發音</button>')+'</div>';
   var isChoice=choiceActive();
-  html+=isChoice?'<div class="opts4" id="opts4"></div><button class="sm idk" id="idk"'+(flipped?' disabled':'')+'>不知道</button><div class="res" id="res"></div>':'<div class="ans"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" lang="'+(dir==="zh"?"ko":"zh-Hant")+'" placeholder="'+(dir==="zh"?"在這裡打韓文…":"在這裡打中文意思…")+'"'+(flipped?" disabled":"")+'><button class="sm" id="chk"'+(flipped?" disabled":"")+'>檢查</button></div><div class="res" id="res"></div>';
-  html+='<div class="act"><button class="nx" id="bnx" '+(flipped?"":"disabled")+'>下一張 ➜</button></div>';
+  html+=isChoice?'<div class="opts4" id="opts4"></div>':'<div class="ans"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" lang="'+(dir==="zh"?"ko":"zh-Hant")+'" placeholder="'+(dir==="zh"?"在這裡打韓文…":"在這裡打中文意思…")+'"'+(flipped?" disabled":"")+'><button class="sm" id="chk"'+(flipped?" disabled":"")+'>檢查</button></div><div class="res" id="res"></div>';
+  html+='<div class="act"><button class="nx" id="bnx" '+(flipped?"":"disabled")+'>下一題 ➜</button></div>';
   st.innerHTML=html;
   st.classList.toggle("cm",isChoice);st.classList.toggle("fl",flipped);
   var big=st.querySelector(".big");
@@ -448,17 +452,26 @@ function renderReview(){
   var spb=$("#spk");if(spb)spb.onclick=function(e){e.stopPropagation();speak(cur.ko)};
   if(isChoice){
     var box=$("#opts4"),lg=dir==="zh"?"ko":"zh-Hant";
+    function tag(bt,txt){var t=document.createElement("span");t.className="tag";t.textContent=txt;bt.appendChild(t)}
     opts.forEach(function(o,n){
       var bt=document.createElement("button");bt.type="button";bt.className="opt";
       var kn=document.createElement("span");kn.className="kn";kn.textContent=n+1;
       var tx=document.createElement("span");tx.textContent=o.t;tx.lang=lg;
       bt.appendChild(kn);bt.appendChild(tx);
-      if(flipped){bt.disabled=true;bt.classList.add(o.c?"good":(n===picked?"bad":"dim"))}
-      else bt.onclick=function(){pickOpt(n)};
+      if(flipped){
+        bt.disabled=true;
+        if(o.c){bt.classList.add("good");tag(bt,"✓ 正確")}
+        else if(n===picked){bt.classList.add("bad");tag(bt,"✗ 錯誤")}
+        else bt.classList.add("dim");
+      }else bt.onclick=function(){pickOpt(n)};
       box.appendChild(bt);
     });
-    $("#idk").onclick=dontKnow;
-    if(flipped&&checked!==null){var rs2=$("#res");rs2.className="res "+(checked?"good":"bad");rs2.textContent=checked?"✅ 正確！":(picked===-2?"答案是綠色那個":"❌ 答錯了，正確答案是綠色那個")}
+    var dk=document.createElement("button");dk.type="button";dk.className="opt dk";
+    var dkn=document.createElement("span");dkn.className="kn";dkn.textContent=opts.length+1;
+    var dkt=document.createElement("span");dkt.textContent="不知道";
+    dk.appendChild(dkn);dk.appendChild(dkt);
+    if(flipped){dk.disabled=true;dk.classList.add(picked===-2?"sel":"dim")}else dk.onclick=dontKnow;
+    box.appendChild(dk);
   }else{
   var ai=$("#ans");ai.value=typed;
   ai.onkeydown=function(e){if(e.key==="Enter"&&!e.isComposing){e.preventDefault();e.stopPropagation();checkAns()}};
@@ -738,7 +751,7 @@ $("#tidy").onclick=async function(){
 document.addEventListener("keydown",function(e){
   if(e.key==="Enter"&&!e.repeat&&!e.isComposing&&flipped&&!$("#review").hidden&&!document.querySelector(".ov")&&e.target.tagName!=="BUTTON"){e.preventDefault();next()}
   if(/^[1-4]$/.test(e.key)&&!e.repeat&&!flipped&&cur&&opts&&optsFor===qn+":"+cur.id&&useChoice()&&!$("#review").hidden&&!document.querySelector(".ov")&&!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
-    var n4=+e.key-1;if(opts[n4]){e.preventDefault();pickOpt(n4)}
+    var n4=+e.key-1;if(n4<opts.length){e.preventDefault();pickOpt(n4)}else if(n4===opts.length){e.preventDefault();dontKnow()}
   }
 });
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
