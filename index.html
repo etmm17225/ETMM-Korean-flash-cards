@@ -133,21 +133,36 @@ nav button{white-space:nowrap;padding:10px 4px}
 .opt.dk.dim{opacity:.6}
 .opt.dk.sel{opacity:1}
 @media (hover:none){.opt .kn{display:none}}
+.card .exp{font-size:30px;font-weight:600;margin-top:10px;word-break:break-word}
+#study .bar select{width:100%}
+.ex{width:100%}
+.exh{font-size:13px;color:var(--mu);margin-top:14px}
+.exk{font-size:22px;font-weight:700;line-height:1.45;margin-top:16px;padding-top:14px;border-top:1px dashed var(--bd);word-break:keep-all}
+.exz{font-size:15px;color:var(--mu);margin-top:6px}
+.exb{display:flex;gap:8px;justify-content:center;margin-top:12px}
 </style>
 </head>
 <body>
 <main>
 <div class="top"><h1>🇰🇷 韓文單字閃卡</h1><button class="chip" id="syncpill">⏳ 連線中</button></div>
 <nav id="nav">
+  <button data-t="study">學習</button>
   <button data-t="review" class="on">複習</button>
   <button data-t="list">單字表</button>
   <button data-t="stats">分析</button>
   <button data-t="settings">設定</button>
 </nav>
 
+<section id="study" hidden>
+  <div class="bar"><select id="stsel" aria-label="標籤"></select></div>
+  <div class="bar"><span id="stprog"></span><span></span></div>
+  <div id="stcard"></div>
+  <div class="act"><button class="nx" id="stnext">下一個 ➜</button></div>
+</section>
+
 <section id="review">
   <div class="sg big" id="modes">
-    <button class="on" data-g="learn"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5C4.5 4 8 4 12 6c4-2 7.5-2 10-.5V19c-2.5-1.5-6-1.5-10 .5-4-2-7.5-2-10-.5Z"/><path d="M12 6v13.5"/></svg>學習</button>
+    <button class="on" data-g="learn"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>一般</button>
     <button data-g="game"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10.5v4M5 12.5h4"/><path d="M16 11.5h.01M18.5 13.5h.01"/></svg>遊戲</button>
   </div>
   <div class="sec opts collapsed" id="optsbox"><button class="osum" id="osum" type="button"><span id="osumt"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -594,6 +609,7 @@ function editWord(w){
   ov.querySelector(".go").onclick=function(){
     var z=q("e1").value.trim(),k=q("e2").value.trim();
     if(!z||!k){q("e5").textContent="中文和韓文都要填。";return}
+    if(w.zh!==z||w.ko!==k)delete w.ex;
     w.zh=z;w.ko=k;w.tags=parseTags(q("e3").value);delete w.cat;
     var p=parseInt(q("e4").value,10)-1;
     if(p>=0&&p<words.length&&p!==i){words.splice(i,1);words.splice(p,0,w)}
@@ -692,7 +708,7 @@ $("#reset").onclick=function(){
 /* ---- nav ---- */
 document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){
   document.querySelectorAll("#nav button").forEach(function(x){x.classList.toggle("on",x===b)});
-  ["review","list","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
+  ["study","review","list","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
   render();
 }});
 function ask(msg,withInput,val){
@@ -851,7 +867,87 @@ document.querySelectorAll("[data-a]").forEach(function(b){b.onclick=function(){
   syncAns();cur=null;flipped=false;resetAns();renderReview();
 }});
 syncAns();
-function render(){renderCatSel();renderReview();renderList();renderStats()}
+var stf="all",sd=[],si=0,sdKey=null;
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function stDeal(avoid){
+  var ids=words.filter(function(w){return stf==="all"||hasTag(w,stf)}).map(function(w){return w.id});
+  shuffle(ids);
+  if(avoid&&ids.length>1&&ids[0]===avoid){var t=ids[0];ids[0]=ids[ids.length-1];ids[ids.length-1]=t}
+  sd=ids;si=0;sdKey=stf;
+}
+function stNext(){
+  if(!sd.length)return;
+  var last=sd[si];si++;
+  if(si>=sd.length)stDeal(last);
+  renderStudy();
+}
+function renderStSel(){
+  var map={},none=0;
+  words.forEach(function(w){var a=tagsOf(w);if(!a.length)none++;a.forEach(function(t){map[t]=(map[t]||0)+1})});
+  if(stf!=="all"&&!(stf==="__none"?none:map[stf]))stf="all";
+  var s2=$("#stsel");s2.innerHTML="";
+  function op(v,t){var o=document.createElement("option");o.value=v;o.textContent=t;s2.appendChild(o)}
+  op("all","全部標籤（"+words.length+"）");
+  Object.keys(map).sort(function(a,b){return a.localeCompare(b,"zh-Hant")}).forEach(function(t){op(t,"#"+t+"（"+map[t]+"）")});
+  if(none)op("__none","（無標籤）（"+none+"）");
+  s2.value=stf;
+}
+function renderStudy(){
+  var el=$("#stcard");
+  if(sdKey!==stf)stDeal();
+  var byId={};words.forEach(function(w){byId[w.id]=w});
+  var keep=sd.filter(function(id){return byId[id]});
+  if(keep.length!==sd.length){var cid=sd[si];sd=keep;si=Math.max(0,keep.indexOf(cid));}
+  if(!sd.length&&words.some(function(w){return stf==="all"||hasTag(w,stf)}))stDeal();
+  if(!sd.length){el.innerHTML='<div class="empty">'+(words.length?'這個標籤下沒有單字。':'還沒有單字，到「單字表」新增。')+'</div>';$("#stprog").textContent="";$("#stnext").disabled=true;return}
+  if(si>=sd.length)si=0;
+  var w=byId[sd[si]];
+  if(exFor!==w.id){exFor=w.id;exShow=false;exErr=""}
+  $("#stnext").disabled=false;
+  $("#stprog").textContent=(si+1)+" / "+sd.length;
+  el.innerHTML='<div class="card" id="stc"><span class="lab">單字</span><div class="big" lang="ko"></div><div class="exp"></div><div class="hint"></div><button class="spk" id="stspk">🔊 發音</button><div class="ex" id="stex"></div></div>';
+  el.querySelector(".big").textContent=w.ko;
+  el.querySelector(".exp").textContent=w.zh;
+  var tg=tagsOf(w);el.querySelector(".hint").textContent=tg.length?tagStr(w):"";
+  $("#stspk").onclick=function(e){e.stopPropagation();speak(w.ko)};
+  $("#stc").onclick=function(e){if(e.target.closest("button"))return;exShow=!exShow;if(!exShow)exErr="";renderStudy()};
+  var ex=el.querySelector("#stex");
+  if(!exShow){ex.innerHTML='<div class="exh">點一下卡片看例句</div>'}
+  else if(w.ex){
+    ex.innerHTML='<div class="exk" lang="ko"></div><div class="exz"></div><div class="exb"><button class="sm" id="exspk" type="button">🔊 例句</button><button class="sm" id="exnew" type="button">🔄 換一句</button></div>';
+    ex.querySelector(".exk").textContent=w.ex.ko;ex.querySelector(".exz").textContent=w.ex.zh;
+    $("#exspk").onclick=function(){speak(w.ex.ko)};
+    $("#exnew").onclick=function(){genEx(w,true)};
+  }else if(exBusy===w.id){ex.innerHTML='<div class="exh">產生例句中…</div>'}
+  else if(exErr){
+    ex.innerHTML='<div class="exh" id="exerr"></div><div class="exb"><button class="sm" id="exretry" type="button">再試一次</button></div>';
+    $("#exerr").textContent=exErr;$("#exretry").onclick=function(){genEx(w)};
+  }else{genEx(w)}
+}
+var exShow=false,exBusy="",exErr="",exFor="";
+async function genEx(w,force){
+  var id=w.id;
+  if(exBusy===id)return;
+  if(!cfg.gem){exErr="要自動產生例句，請先到「設定」貼上 Gemini 金鑰。";renderStudy();return}
+  exBusy=id;exErr="";renderStudy();
+  try{
+    var prev=(force&&w.ex)?"（請不要跟這一句重複："+w.ex.ko+"）":"";
+    var t=await ai('你是韓語老師。請用韓文單字「'+w.ko+'」（中文意思：「'+w.zh+'」）寫一個適合初學者、簡短自然的韓文例句，句子裡必須用到這個單字（若是人名或品牌名，就把它當成人名或品牌名使用）'+prev+'，並附上繁體中文翻譯。只回傳 JSON，格式為 {"ko":"韓文例句","zh":"中文翻譯"}，不要任何其他文字。');
+    var o=JSON.parse(t.match(/\{[\s\S]*\}/)[0]);
+    if(!o.ko||!o.zh)throw new Error("bad");
+    var cw=words.filter(function(x){return x.id===id})[0];
+    if(cw){cw.ex={ko:String(o.ko).trim(),zh:String(o.zh).trim()};save()}
+  }catch(e){
+    exErr=(e&&e.code==="rate_limited")?"產生太頻繁，請稍後再試。":"產生例句失敗，請檢查「設定」裡的金鑰與模型名稱，再試一次。";
+  }
+  exBusy="";renderStudy();
+}
+$("#stsel").onchange=function(){stf=this.value;stDeal();renderStudy()};
+$("#stnext").onclick=stNext;
+document.addEventListener("keydown",function(e){
+  if(!$("#study").hidden&&!e.repeat&&!document.querySelector(".ov")&&!/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)&&(e.key==="Enter"||e.key==="ArrowRight")){e.preventDefault();stNext()}
+});
+function render(){renderCatSel();renderStSel();renderStudy();renderReview();renderList();renderStats()}
 function updatePill(){
   var t=$("#syncmsg").textContent,p=$("#syncpill");
   p.textContent=t.indexOf("☁️ 已同步")===0?"☁️ 已同步":(t.indexOf("☁️ 連線")===0||t.indexOf("☁️ 同步中")===0)?"⏳ 連線中":t.indexOf("⚠️")===0?"⚠️ 同步失敗":"💾 僅存本機";
