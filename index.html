@@ -141,6 +141,7 @@ nav button{white-space:nowrap;padding:10px 4px}
 .exk{font-size:22px;font-weight:700;line-height:1.45;margin-top:16px;padding-top:14px;border-top:1px dashed var(--bd);word-break:keep-all}
 .exz{font-size:15px;color:var(--mu);margin-top:6px}
 .exb{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.hint:empty{display:none}
 </style>
 </head>
 <body>
@@ -472,9 +473,10 @@ function renderReview(){
   if(rolledFor!==cur.id){dir=pref==="rand"?(Math.random()<.5?"zh":"ko"):pref;rolledFor=cur.id}
   if(game){var tk=qn+':'+(flipped?1:0);if(tk!==tkey){tkey=tk;startTimer()}}
   var front=dir==="zh"?cur.zh:cur.ko, back=dir==="zh"?cur.ko:cur.zh;
-  var html=(game?'<div class="pb" style="margin-bottom:8px"><i id="tbar" style="width:100%;background:var(--ac)"></i></div><div class="bar"><span id="tnum">⏱ 10 秒</span><span>🎯 '+gOk+' / '+gN+'　🔥 連續 '+gS+'（最高 '+gBest+'）</span></div>':'')+'<div class="card" id="card"><span class="lab">'+(flipped?"答案":"題目")+'</span>';
-  if(!flipped){
-    html+='<div class="big'+(dir==="zh"?" zh":"")+'" lang="'+(dir==="zh"?"zh-Hant":"ko")+'"></div><div class="hint">'+(game?"請在時間內作答，沒作答會自動跳下一題":"點一下卡片看答案（直接看答案會算不熟）")+'</div>';
+  var showAns=flipped&&!choiceActive();
+  var html=(game?'<div class="pb" style="margin-bottom:8px"><i id="tbar" style="width:100%;background:var(--ac)"></i></div><div class="bar"><span id="tnum">⏱ 10 秒</span><span>🎯 '+gOk+' / '+gN+'　🔥 連續 '+gS+'（最高 '+gBest+'）</span></div>':'')+'<div class="card" id="card"><span class="lab">'+(showAns?"答案":"題目")+'</span>';
+  if(!showAns){
+    html+='<div class="big'+(dir==="zh"?" zh":"")+'" lang="'+(dir==="zh"?"zh-Hant":"ko")+'"></div><div class="hint">'+(flipped?"":(game?"請在時間內作答，沒作答會自動跳下一題":"點一下卡片看答案（直接看答案會算不熟）"))+'</div>';
   }else{
     html+='<div class="big'+(dir==="ko"?" zh":"")+'"></div><div class="hint" style="margin-top:8px"></div>';
   }
@@ -485,8 +487,8 @@ function renderReview(){
   st.innerHTML=html;
   st.classList.toggle("cm",isChoice);st.classList.toggle("fl",flipped);
   var big=st.querySelector(".big");
-  big.textContent=flipped?back:front;
-  if(flipped){st.querySelector(".hint").textContent=dir==="zh"?"":"韓文："+cur.ko}
+  big.textContent=showAns?back:front;
+  if(showAns){st.querySelector(".hint").textContent=dir==="zh"?"":"韓文："+cur.ko}
   $("#card").onclick=function(e){if(e.target.id==="spk"||flipped||game||String(window.getSelection())!=="")return;if(checked===null)record(false);flipped=true;renderReview();}
   var spb=$("#spk");if(spb)spb.onclick=function(e){e.stopPropagation();speak(cur.ko)};
   if(isChoice){
