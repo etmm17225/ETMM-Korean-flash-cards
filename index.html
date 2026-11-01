@@ -72,8 +72,9 @@ select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--bd);bac
 .sg button{flex:1;border:0;border-right:1px solid var(--bd);background:var(--sf);color:var(--tx);padding:9px 6px;font-size:14px;cursor:pointer}
 .sg button:last-child{border-right:0}
 .sg button.on{background:var(--ac);color:#fff;font-weight:700}
-.sg.big{margin-bottom:12px;border-radius:14px}
-.sg.big button{padding:13px 6px;font-size:16px;font-weight:700}
+.sg.big{margin-bottom:12px;border-radius:12px}
+.sg.big{height:44px}
+.sg.big button{height:100%;padding:0 6px;font-size:15px;font-weight:700}
 .opts{padding:12px 14px;margin-bottom:12px}
 .orow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .orow:last-child{margin-bottom:0}
@@ -506,7 +507,7 @@ function renderReview(){
     });
     var dk=document.createElement("button");dk.type="button";dk.className="opt dk";
     var dkn=document.createElement("span");dkn.className="kn";dkn.textContent=opts.length+1;
-    var dkt=document.createElement("span");dkt.textContent="不知道";
+    var dkt=document.createElement("span");dkt.textContent=(dir==="zh"?"모르겠어요":"不知道");dkt.lang=(dir==="zh"?"ko":"zh-Hant");
     dk.appendChild(dkn);dk.appendChild(dkt);
     if(flipped){dk.disabled=true;dk.classList.add(picked===-2?"sel":"dim")}else dk.onclick=dontKnow;
     box.appendChild(dk);
@@ -550,12 +551,14 @@ var lf="all";
 var IC={edit:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ac)"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',trash:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--no)"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',star:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#f5a623"><polygon points="12 2.5 15.1 8.6 21.8 9.6 16.9 14.3 18.1 21 12 17.8 5.9 21 7.1 14.3 2.2 9.6 8.9 8.6"/></svg>',done:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ok)"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',sort:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg>',plus:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',x:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',filter:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>'};
 var sk="manual";try{sk=localStorage.getItem(LS+"-sort")||"manual"}catch(e){}
 function wts(w){return parseInt(String(w.id).slice(0,-4),36)||0}
+var zhCol=(function(){try{return new Intl.Collator("zh-u-co-zhuyin")}catch(e){return new Intl.Collator("zh-Hant")}})();
+var koCol=new Intl.Collator("ko");
 var SORTS={
   manual:{n:"自訂順序（可用 ▲▼ 調整）",s:"自訂"},
   newest:{n:"最新加入",s:"最新",f:function(a,b){return wts(b)-wts(a)}},
   oldest:{n:"最早加入",s:"最早",f:function(a,b){return wts(a)-wts(b)}},
-  zh:{n:"中文順序",s:"中文",f:function(a,b){return a.zh.localeCompare(b.zh,"zh-Hant")}},
-  ko:{n:"韓文順序（가나다）",s:"韓文",f:function(a,b){return a.ko.localeCompare(b.ko,"ko")}},
+  zh:{n:"以中文排序",s:"中文",f:function(a,b){return zhCol.compare(a.zh,b.zh)}},
+  ko:{n:"以韓文排序",s:"韓文",f:function(a,b){return koCol.compare(a.ko,b.ko)}},
   weak:{n:"最需加強（錯多的在前）",s:"需加強",f:function(a,b){return ((b.no||0)-(b.ok||0)*0.5)-((a.no||0)-(a.ok||0)*0.5)}},
   least:{n:"最少練習",s:"少練習",f:function(a,b){return ((a.ok||0)+(a.no||0))-((b.ok||0)+(b.no||0))}}
 };
@@ -609,9 +612,9 @@ function openSort(){
   ov.innerHTML='<div class="dlg"><p>排序方式</p><div class="flist"></div><div class="btns"><button class="no">關閉</button></div></div>';
   document.body.appendChild(ov);
   var list=ov.querySelector(".flist");
-  Object.keys(SORTS).forEach(function(k){
+  Object.keys(SORTS).filter(function(k){return k!=="manual"}).forEach(function(k){
     var b=document.createElement("button");b.type="button";b.className="fi"+(sk===k?" on":"");b.textContent=SORTS[k].n;
-    b.onclick=function(){sk=k;try{localStorage.setItem(LS+"-sort",k)}catch(e){}ov.remove();renderList()};
+    b.onclick=function(){sk=(sk===k?"manual":k);try{localStorage.setItem(LS+"-sort",k)}catch(e){}ov.remove();renderList()};
     list.appendChild(b);
   });
   ov.querySelector(".no").onclick=function(){ov.remove()};
