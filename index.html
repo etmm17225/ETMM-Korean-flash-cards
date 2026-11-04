@@ -142,24 +142,96 @@ nav button{white-space:nowrap;padding:10px 4px}
 .exz{font-size:15px;color:var(--mu);margin-top:6px}
 .exb{display:flex;gap:8px;justify-content:center;margin-top:12px}
 .hint:empty{display:none}
+.pt{width:calc(32px + (100% - 32px) * var(--n,11) / 11);border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--bd);background:var(--sf)}
+.pt th{background:var(--bd);color:var(--tx);font-size:18px;font-weight:700;padding:6px 0;position:sticky;top:0;z-index:2}
+.pt th.rh{position:static;width:32px;font-size:20px}
+.pt tr:nth-child(even) td{background:var(--bg)}
+.pt td{padding:0}
+.pc{width:100%;border:0;background:none;font-size:20px;font-weight:700;padding:9px 0;cursor:pointer;font-family:inherit;line-height:1.2}
+.pgt{font-size:13px;color:var(--mu);margin:16px 2px 8px}
+.pg{display:flex;flex-wrap:wrap;gap:8px}
+.pk{width:calc((100% - 32px)/5);border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:12px;font-size:26px;font-weight:700;padding:12px 0;cursor:pointer;font-family:inherit}
+.pwrap{width:100%;max-width:330px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.pop{width:100%;border-radius:22px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.ptop{background:#333;color:#fff;padding:20px 22px 18px;position:relative}
+.pbig{font-size:64px;font-weight:700;line-height:1.1}
+.pspk{position:absolute;top:22px;right:18px;width:44px;height:44px;border:0;background:none;color:#fff;cursor:pointer}
+.prom{color:#b5b5b8;font-size:20px;margin-top:2px}
+.pfor{color:#fff;font-size:16px;margin-top:12px;line-height:1.6;word-break:break-word}
+.pbot{background:var(--sf);color:var(--tx);padding:18px 22px;min-height:110px}
+.pexh{font-size:13px;color:var(--mu);margin-bottom:8px}
+.pe{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--bd)}
+.pe:last-child{border-bottom:0}
+.pe b{font-size:18px}.pe span{color:var(--mu);font-size:14px}
+.pclose{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#333;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#stmode{margin-bottom:12px}
+#ptabs{margin-bottom:10px}
+nav button{font-size:14px;padding:10px 2px;min-width:0}
+#stmode{display:none}
+.tcard{display:flex;align-items:center;gap:12px;background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.tsnd{flex:none;width:48px;text-align:center;font-size:24px;font-weight:800}
+.tmem{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.tm,.fk{border:1px solid var(--bd);background:var(--bg);border-radius:10px;padding:6px 8px;min-width:48px;display:flex;flex-direction:column;align-items:center;cursor:pointer;font-family:inherit;color:var(--tx)}
+.tsy{font-size:22px;font-weight:700;line-height:1.2}
+.tj{font-size:11px;color:var(--mu)}
+.frow{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.fcap{font-size:13px;color:var(--mu);flex:none}
+.frow select{flex:1;width:auto;min-width:0}
+.fg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fk{background:var(--sf);padding:8px 4px}
+.fk .tsy{font-size:26px}
+#phint:empty{display:none}
+.auquick{display:flex;gap:8px;margin:8px 0}
+.auquick select{flex:1;min-width:0;width:auto;font-size:14px;padding:9px 6px}
+.aucl{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.auc{border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;padding:6px 10px;font-size:18px;font-weight:700;cursor:pointer;min-width:56px;font-family:inherit;text-align:center}
+.auc small{display:block;font-size:10px;font-weight:400;color:var(--mu)}
+.auc.bad{border-color:var(--no)}
+.aurep{white-space:pre-wrap;font-size:12px;color:var(--mu);margin-top:8px;line-height:1.6}
+.pt{width:calc(36px + (100% - 36px) * var(--n,11) / 11)}
+.pt th{background:var(--g1);padding:5px 0}
+.pt th.rh{width:36px;padding:0}
+.pt tr:nth-child(odd) td{background:var(--sf)}
+.pt tr:nth-child(even) td{background:var(--g2)}
+.ptv{display:block;font-size:18px;font-weight:700;color:var(--cb);line-height:1.15}
+.ptc{display:block;font-size:20px;font-weight:700;color:var(--cp);line-height:1.15}
+.pt th .ptr{display:block;font-size:9px;font-weight:400;line-height:1.1;color:var(--cb);white-space:nowrap}
+.pt th.rh .ptr{color:var(--cp)}
+.pc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:5px 0;color:var(--tx)}
+.pts{font-size:20px;font-weight:700;line-height:1.15}
+.ptq{font-size:9px;font-weight:400;color:var(--mu);line-height:1;white-space:nowrap;letter-spacing:-.2px}
+@media (max-width:380px){.ptq,.pt th .ptr{font-size:8px;letter-spacing:-.3px}}
+:root{--g1:#e8e8ea;--g2:#f3f3f5;--cp:#d12a8b;--cb:#2d9ae0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--g1:#37373d;--g2:#2b2b30;--cp:#ff6fb7;--cb:#5db4ff}}
+.kpos{font-size:13px;font-weight:400;color:var(--mu);margin-left:1px}
 </style>
 </head>
 <body>
 <main>
 <div class="top"><h1>🇰🇷 韓文單字閃卡</h1><button class="chip" id="syncpill">⏳ 連線中</button></div>
 <nav id="nav">
-  <button data-t="study" class="on">學習</button>
+  <button data-t="pron">發音</button>
+  <button data-t="study" class="on">單字</button>
   <button data-t="review">複習</button>
   <button data-t="list">單字表</button>
   <button data-t="stats">分析</button>
   <button data-t="settings">設定</button>
 </nav>
 
+<section id="pron" hidden>
+    <div class="sg" id="ptabs"><button class="on" data-pt="a">ㅏ~ㅣ</button><button data-pt="b">ㅐ~ㅢ</button><button data-pt="f">四十音</button><button data-pt="t">尾音</button></div>
+    <div class="msg" id="phint">點一下任何一個字，就會念出來。</div>
+    <div class="msg" id="vwarn" hidden style="color:var(--no);font-weight:600">這個瀏覽器沒有找到韓文語音，所以聲音會很奇怪。Windows 請改用 Microsoft Edge 開啟，或到「設定 → 發音設定」看說明。</div>
+    <div id="pgrid"></div>
+  
+</section>
+
 <section id="study">
-  <div class="bar"><select id="stsel" aria-label="標籤"></select></div>
-  <div class="bar"><span id="stprog"></span><span></span></div>
-  <div id="stcard"></div>
-  <div class="act"><button class="nx" id="stnext">下一個 ➜</button></div>
+    <div class="bar"><select id="stsel" aria-label="標籤"></select></div>
+    <div class="bar"><span id="stprog"></span><span></span></div>
+    <div id="stcard"></div>
+    <div class="act"><button class="nx" id="stnext">下一個 ➜</button></div>
+  
 </section>
 
 <section id="review" hidden>
@@ -204,6 +276,8 @@ nav button{white-space:nowrap;padding:10px 4px}
     <label>#標籤（可輸入多個，用空格分開；留空會自動加標籤）</label>
     <input id="acat" placeholder="例如：#人名 #食物" autocomplete="off">
     <div class="tagsug" id="tagsug"></div>
+    <label>詞性（可留空，有 Gemini 金鑰時會自動判斷）</label>
+    <select id="apos"></select>
     <button class="sm" id="trbtn" style="margin-top:12px;width:100%;padding:12px">✨ 自動翻譯（中文 ⇄ 韓文）</button>
     <button class="pri" id="addbtn">加入單字</button>
     <div class="msg" id="addmsg"></div>
@@ -231,6 +305,16 @@ nav button{white-space:nowrap;padding:10px 4px}
     <div class="msg" id="sstat"></div>
   </div>
   <div class="sec">
+    <div class="h2">🔊 發音設定</div>
+    <div class="msg">發音是用這台裝置內建的韓文語音念的。聽起來不準的話，先換一個語音試試。</div>
+    <label>韓文語音</label>
+    <select id="svoice"></select>
+    <label>語速：<span id="srateval"></span></label>
+    <input id="srate" type="range" min="0.5" max="1.2" step="0.05" style="padding:0">
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="sm" id="vt1" type="button">試聽：며</button><button class="sm" id="vt2" type="button">試聽：안녕하세요</button></div>
+    <div class="msg" style="line-height:1.7"><b>Windows</b>：請用 <b>Microsoft Edge</b> 開啟這個網站。語音選單裡會出現名稱像「Microsoft … Online (Natural) - Korean (Korea)」的高品質韓文語音（需要連網），選它會自然很多。用 Chrome 或 Firefox 時，通常只有品質較差的語音，甚至完全沒有韓文語音，聲音就會很奇怪。<br><b>Mac／iPhone／iPad</b>：Safari 可能看不到另外下載的高品質語音（Premium、Enhanced），選單裡只會有內建的幾種。可以改用 Edge 或 Chrome 開啟試試看。<br>（語音實際能不能選到，要看你的裝置和瀏覽器。）</div>
+  </div>
+  <div class="sec">
     <div class="h2">✨ AI 功能（Gemini 免費額度）</div>
     <div class="msg">用於自動翻譯、自動標籤、學習建議。到 aistudio.google.com/apikey 建立免費金鑰。金鑰只存在這台裝置，每台裝置要各貼一次。免費額度的內容可能被 Google 用來改進產品。</div>
     <label>Gemini API 金鑰</label>
@@ -240,6 +324,43 @@ nav button{white-space:nowrap;padding:10px 4px}
     <button class="pri" id="gsave">儲存</button>
     <button class="sm" id="gtest" type="button" style="margin-top:10px">測試連線</button>
     <div class="msg" id="gstat"></div>
+  </div>
+  <div class="sec" id="ausec">
+    <div class="h2">🎧 書附音檔（只存在這台裝置）</div>
+    <div class="msg" style="line-height:1.7">選取書附的 mp3，網站會在你的瀏覽器裡，依靜音自動切成一段一段，你標上每一段是哪個音之後存起來。音檔不會上傳到任何地方，也不會跟著同步，每台裝置要各匯入一次。有匯入的音節，點發音表時會播你的錄音，沒有的才用裝置語音。</div>
+    <div class="h2" style="font-size:14px;margin-top:14px">📦 依對照表，從 zip 一次匯入</div>
+    <div class="msg" style="line-height:1.7">① 先選對照表（你整理的 Excel，或 CSV／TSV 都可以）。② 再選音檔 zip，可以一次選好幾個。網站會依對照表自動切段、標好內容，並寫出匯入報告。如果 zip 裡的檔案本身就是「가.m4a」這種一個音節一個檔、檔名以韓文音節開頭，可以不選對照表，直接做 ②。</div>
+    <button class="sm" id="ammappick" type="button">① 選取對照表…</button>
+    <input type="file" id="ammapf" accept=".xlsx,.csv,.tsv,.txt" hidden>
+    <div class="msg" id="ammapmsg"></div>
+    <label style="display:flex;gap:8px;align-items:center;margin:8px 0 0"><input type="checkbox" id="amk1" checked style="width:auto"> 發音類（母音、字母、單獨音節）</label>
+    <label style="display:flex;gap:8px;align-items:center;margin:6px 0 0"><input type="checkbox" id="amk2" style="width:auto"> 單字與句子類（數量多，佔較多空間）</label>
+    <select id="amdup" style="margin-top:8px"><option value="first">同一個音有多份錄音時：用第一份</option><option value="last">同一個音有多份錄音時：用最後一份</option></select>
+    <button class="sm" id="amzippick" type="button" style="margin-top:10px">② 選取 zip…</button>
+    <input type="file" id="amzipf" accept=".zip,application/zip,application/x-zip-compressed" multiple hidden>
+    <div class="msg" id="amzipmsg"></div>
+    <div class="aurep" id="amrep"></div>
+    <div class="h2" style="font-size:14px;margin-top:18px">手動匯入</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="sm" id="aupick" type="button">選取整軌音檔…</button>
+      <button class="sm" id="aupick2" type="button">批次匯入單音節檔案…</button>
+    </div>
+    <input type="file" id="aufile2" accept="audio/*,.mp3,.wav,.m4a,.mp4" multiple hidden>
+    <div class="msg" id="aumsg2"></div>
+    <input type="file" id="aufile" accept="audio/*,.mp3" multiple hidden>
+    <div id="aupanel" hidden>
+      <div class="msg" id="auinfo" style="font-weight:700;color:var(--tx)"></div>
+      <label>切段靈敏度（段數不對時調整：段數太少就往左，切出太多雜音就往右）</label>
+      <input id="ausens" type="range" min="1" max="15" step="1" value="4" style="padding:0">
+      <label>這一軌依序是哪些音節（用空格分開）</label>
+      <textarea id="aulist" placeholder="例如：아 야 어 여 오 요 우 유 으 이"></textarea>
+      <div class="auquick"><select id="auc" aria-label="子音"></select><select id="auv" aria-label="母音"></select><button class="sm" id="aufill" type="button">填入</button></div>
+      <div class="aucl" id="auclips"></div>
+      <button class="pri" id="ausave" type="button">儲存這一軌</button>
+      <div class="msg" id="aumsg"></div>
+    </div>
+    <div class="msg" id="austat"></div>
+    <button class="sm" id="auclear" type="button">清除已匯入的音檔</button>
   </div>
   <div class="sec">
     <div class="h2">💾 備份</div>
@@ -253,6 +374,10 @@ nav button{white-space:nowrap;padding:10px 4px}
     <div class="msg" id="syncmsg"></div>
     <button class="sm" id="tidy">🏷️ 自動為「無標籤」單字加標籤</button>
     <div class="msg" id="tidymsg"></div>
+    <button class="sm" id="tidypos" type="button">📝 自動為「沒有詞性」的單字補上詞性</button>
+    <div class="msg" id="tidyposmsg"></div>
+    <button class="sm" id="tagpos" type="button">🧹 把標籤裡的詞性移到詞性欄位</button>
+    <div class="msg" id="tagposmsg"></div>
     <button class="sm" id="reset">重設學習進度</button>
   </div>
 
@@ -380,6 +505,7 @@ function push(){
 function seed(){return SEED.map(function(p){return mk(p[0],p[1],p[2])})}
 function applyWords(w){
   words=clone(w);
+  words.forEach(function(x){if(x.pos==="專有名詞")x.pos="名詞"});
   if(cur){cur=words.filter(function(x){return x.id===cur.id})[0]||null}
   render();
 }
@@ -430,18 +556,42 @@ async function init(){
 }
 
 /* ---- speech ---- */
-var voice=null;
+var voice=null,clipURL={},curAudio=null;
+function koVoices(){return("speechSynthesis" in window)?speechSynthesis.getVoices().filter(function(v){return /^ko/i.test(v.lang)}):[]}
+function voiceScore(v){var n=v.name+" "+(v.voiceURI||""),sc=0;if(/natural/i.test(n))sc+=6;if(/premium|enhanced|siri/i.test(n))sc+=4;if(/yuna|유나/i.test(n))sc+=2;if(v.localService)sc+=1;return sc}
 function pickVoice(){
-  var vs=speechSynthesis.getVoices();
-  voice=vs.find(function(v){return /^ko/i.test(v.lang)})||null;
+  var list=koVoices(),v=null;
+  if(cfg.voice)v=list.filter(function(x){return x.voiceURI===cfg.voice||x.name===cfg.voice})[0]||null;
+  if(!v&&list.length)v=list.slice().sort(function(a,b){return voiceScore(b)-voiceScore(a)})[0];
+  voice=v;
 }
-if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=function(){pickVoice();fillVoiceSel();updateVWarn()}}
 function speak(t){
+  try{if(curAudio){curAudio.pause();curAudio=null}}catch(e){}
+  if(clipURL[t]){
+    try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}
+    curAudio=new Audio(clipURL[t]);var pp=curAudio.play();if(pp&&pp.catch)pp.catch(function(){});
+    return;
+  }
   if(!("speechSynthesis" in window)){alert("這個瀏覽器不支援語音播放");return}
+  if(!voice)pickVoice();
   speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=.85;
+  var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=(cfg.rate>0?cfg.rate:.85);
   if(voice)u.voice=voice;
   speechSynthesis.speak(u);
+}
+function updateVWarn(){
+  var w=$("#vwarn");if(!w)return;
+  var no=("speechSynthesis" in window)&&!koVoices().length;
+  w.hidden=!no;
+}
+function fillVoiceSel(){
+  var s2=$("#svoice");if(!s2)return;
+  var list=koVoices();s2.innerHTML="";
+  var o0=document.createElement("option");o0.value="";o0.textContent=list.length?"自動（建議）":"（這台裝置沒有找到韓文語音）";s2.appendChild(o0);
+  list.forEach(function(v){var o=document.createElement("option");o.value=v.voiceURI||v.name;o.textContent=v.name+(v.localService?"":"（線上）");s2.appendChild(o)});
+  s2.value=cfg.voice||"";
+  if(s2.value!==(cfg.voice||""))s2.value="";
 }
 
 /* ---- review ---- */
@@ -548,6 +698,24 @@ document.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){
   renderReview();}});
 document.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){setMode(b.dataset.m)}});
 
+/* ---- part of speech ---- */
+var POS_LIST=["名詞","代名詞","數詞","動詞","形容詞","冠形詞","副詞","助詞","感嘆詞","連接詞","片語","句子"];
+var POS_ABBR={"名詞":"n.","專有名詞":"n.","代名詞":"pron.","數詞":"num.","動詞":"v.","形容詞":"adj.","冠形詞":"det.","副詞":"adv.","助詞":"part.","感嘆詞":"interj.","連接詞":"conj.","片語":"phr.","句子":"sent."};
+function fillPosSel(sel,val,blank){
+  sel.innerHTML="";
+  var o0=document.createElement("option");o0.value="";o0.textContent=blank;sel.appendChild(o0);
+  POS_LIST.forEach(function(p){var o=document.createElement("option");o.value=p;o.textContent=p+"（"+POS_ABBR[p]+"）";sel.appendChild(o)});
+  sel.value=val||"";
+}
+async function classifyPos(items){
+  var none=items.map(function(){return ""});
+  try{
+    if(!cfg.gem)return none;
+    var p='你是韓語老師。請判斷下列每個韓文單字（附中文意思）的詞性，每個只能從這個清單選一個：'+POS_LIST.join('、')+'。人名、地名、品牌名也選「名詞」；由多個詞組成的請選「片語」，完整句子請選「句子」。只回傳 JSON 字串陣列，長度必須等於單字數量，順序一一對應，不要任何其他文字。\n單字：'+JSON.stringify(items.map(function(i){return i.ko+" / "+i.zh}));
+    var out=await ai(p),m=(out||"").match(/\[[\s\S]*\]/),arr=JSON.parse(m[0]);
+    return items.map(function(_,i){var v=typeof arr[i]==="string"?arr[i].trim():"";return POS_LIST.indexOf(v)>=0?v:""});
+  }catch(e){return none}
+}
 /* ---- list ---- */
 var lf="all";
 var IC={edit:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ac)"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',trash:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--no)"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',star:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#f5a623"><polygon points="12 2.5 15.1 8.6 21.8 9.6 16.9 14.3 18.1 21 12 17.8 5.9 21 7.1 14.3 2.2 9.6 8.9 8.6"/></svg>',done:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ok)"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',sort:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg>',plus:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',x:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',filter:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>'};
@@ -577,6 +745,7 @@ function move(i,d){
   var t=words[i];words[i]=words[j];words[j]=t;
   save();render();
 }
+fillPosSel($("#apos"),"","（自動判斷）");
 $("#addtoggle").onclick=function(){
   var p=$("#addpanel");p.hidden=!p.hidden;
   this.innerHTML=p.hidden?IC.plus+"新增":IC.x+"收起";this.classList.toggle("on",!p.hidden);
@@ -626,19 +795,19 @@ $("#stoggle").onclick=openSort;
 function editWord(w){
   var i=words.indexOf(w),n=words.length;
   var ov=document.createElement("div");ov.className="ov";
-  ov.innerHTML='<div class="dlg"><p>編輯單字</p><label>中文</label><input id="e1" autocomplete="off"><label>韓文</label><input id="e2" autocomplete="off" lang="ko"><label>#標籤（用空格分開）</label><input id="e3" autocomplete="off"><label>排列位置（1 到 '+n+'）</label><input id="e4" type="number" inputmode="numeric" min="1" max="'+n+'"><div class="msg" id="e5"></div><div class="btns"><button class="no">取消</button><button class="go">儲存</button></div></div>';
+  ov.innerHTML='<div class="dlg"><p>編輯單字</p><label>中文</label><input id="e1" autocomplete="off"><label>韓文</label><input id="e2" autocomplete="off" lang="ko"><label>#標籤（用空格分開）</label><input id="e3" autocomplete="off"><label>詞性</label><select id="e6"></select><label>排列位置（1 到 '+n+'）</label><input id="e4" type="number" inputmode="numeric" min="1" max="'+n+'"><div class="msg" id="e5"></div><div class="btns"><button class="no">取消</button><button class="go">儲存</button></div></div>';
   document.body.appendChild(ov);
   var q=function(id){return ov.querySelector("#"+id)};
   q("e1").value=w.zh;q("e2").value=w.ko;
   q("e3").value=tagsOf(w).map(function(t){return "#"+t}).join(" ");
-  q("e4").value=i+1;
+  q("e4").value=i+1;fillPosSel(q("e6"),w.pos,"（無詞性）");
   ov.querySelector(".no").onclick=function(){ov.remove()};
   ov.onclick=function(e){if(e.target===ov)ov.remove()};
   ov.querySelector(".go").onclick=function(){
     var z=q("e1").value.trim(),k=q("e2").value.trim();
     if(!z||!k){q("e5").textContent="中文和韓文都要填。";return}
     if(w.zh!==z||w.ko!==k)delete w.ex;
-    w.zh=z;w.ko=k;w.tags=parseTags(q("e3").value);delete w.cat;
+    w.zh=z;w.ko=k;w.tags=parseTags(q("e3").value);delete w.cat;w.pos=q("e6").value;
     var p=parseInt(q("e4").value,10)-1;
     if(p>=0&&p<words.length&&p!==i){words.splice(i,1);words.splice(p,0,w)}
     save();render();ov.remove();
@@ -657,7 +826,8 @@ function renderList(){
   vis.forEach(function(i,pos){
     var w=words[i],r=document.createElement("div");r.className="row";
     r.innerHTML='<button class="ib" title="發音">🔊</button><div class="w"><div class="k"></div><div class="z"></div></div><span class="st"></span><div class="mv"><button class="ib mvb" title="上移">▲</button><button class="ib mvb" title="下移">▼</button></div><button class="ib" title="編輯">'+IC.edit+'</button><button class="ib" title="刪除">'+IC.trash+'</button>';
-    r.querySelector(".k").textContent=w.ko;
+    var kk=r.querySelector(".k");kk.textContent=w.ko;
+    if(w.pos&&POS_ABBR[w.pos]){var ps=document.createElement("span");ps.className="kpos";ps.textContent="("+POS_ABBR[w.pos]+")";kk.appendChild(ps)}
     r.querySelector(".z").textContent=w.zh+" · "+tagStr(w);
     var st=r.querySelector(".st"),nn=(w.ok||0)+(w.no||0);
     if(!nn){st.innerHTML=IC.star;st.title="還沒練習過"}
@@ -702,14 +872,15 @@ $("#trbtn").onclick=async function(){
   }finally{btn.disabled=false}
 };
 $("#addbtn").onclick=async function(){
-  var zh=$("#azh").value,ko=$("#ako").value,cat=$("#acat").value.trim();
+  var zh=$("#azh").value,ko=$("#ako").value,cat=$("#acat").value.trim(),pos=$("#apos").value;
   if(!zh.trim()||!ko.trim()){$("#addmsg").textContent="請兩欄都填。";return}
   var b=$("#addbtn"),auto=!cat;b.disabled=true;
   if(auto){$("#addmsg").textContent="自動分類中…";cat=(await classify([{zh:zh,ko:ko}]))[0]}
+  if(!pos&&cfg.gem){$("#addmsg").textContent="自動判斷詞性中…";pos=(await classifyPos([{zh:zh,ko:ko}]))[0]}
   b.disabled=false;
-  var nw=mk(zh,ko,cat);words.push(nw);save();
-  $("#azh").value="";$("#ako").value="";$("#acat").value="";$("#azh").focus();
-  $("#addmsg").textContent="✅ 已加入 "+tagStr(nw)+(auto?"（自動標籤）":"")+"，共 "+words.length+" 個";
+  var nw=mk(zh,ko,cat);nw.pos=pos||"";words.push(nw);save();
+  $("#azh").value="";$("#ako").value="";$("#acat").value="";$("#apos").value="";$("#azh").focus();
+  $("#addmsg").textContent="✅ 已加入 "+nw.ko+(nw.pos&&POS_ABBR[nw.pos]?"("+POS_ABBR[nw.pos]+")":"")+" "+tagStr(nw)+(auto?"（自動標籤）":"")+"，共 "+words.length+" 個";
   speak(ko);render();
 };
 $("#bulkbtn").onclick=async function(){
@@ -722,7 +893,14 @@ $("#bulkbtn").onclick=async function(){
   b.disabled=true;
   var need=rows.filter(function(r){return !r.cat});
   if(need.length){msg.textContent="自動分類中…";var cs=await classify(need);need.forEach(function(r,i){r.cat=cs[i]})}
-  rows.forEach(function(r){words.push(mk(r.zh,r.ko,r.cat))});
+  if(cfg.gem){
+    msg.textContent="自動判斷詞性中…";
+    for(var pi=0;pi<rows.length;pi+=40){
+      var pc=rows.slice(pi,pi+40),pr=await classifyPos(pc);
+      pc.forEach(function(r,j){r.pos=pr[j]});
+    }
+  }
+  rows.forEach(function(r){var nw=mk(r.zh,r.ko,r.cat);nw.pos=r.pos||"";words.push(nw)});
   save();$("#bulk").value="";b.disabled=false;render();
   msg.textContent="✅ 已批次加入 "+rows.length+" 個單字（共 "+words.length+" 個）";
 };
@@ -736,7 +914,7 @@ $("#reset").onclick=function(){
 /* ---- nav ---- */
 document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){
   document.querySelectorAll("#nav button").forEach(function(x){x.classList.toggle("on",x===b)});
-  ["study","review","list","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
+  ["pron","study","review","list","stats","settings"].forEach(function(s){$("#"+s).hidden=(s!==b.dataset.t)});
   render();
 }});
 function ask(msg,withInput,val){
@@ -772,13 +950,40 @@ async function classify(items){
     var sample=cfg.gem?1:null;
     if(!sample)return none;
     var ex={};words.forEach(function(w){tagsOf(w).forEach(function(t){ex[t]=1})});
-    var p="你是韓文單字本的標籤助手。同一個單字可以屬於多個類別，請替下列每個單字指定 1 到 3 個簡短的繁體中文標籤（每個 2 到 4 個字，不含 #，例如：人名、地名、品牌、食物、動物、交通、職業、身體、情緒、日常用語、動詞、形容詞、時間）。請盡量沿用已存在的標籤："+JSON.stringify(Object.keys(ex))+"。只回傳 JSON 二維陣列（每個單字對應一個標籤字串陣列），長度必須等於單字數量，順序一一對應，不要任何其他文字。\n單字："+JSON.stringify(items.map(function(i){return i.zh+" / "+i.ko}));
+    var p="你是韓文單字本的標籤助手。同一個單字可以屬於多個類別，請替下列每個單字指定 1 到 3 個簡短的繁體中文標籤（每個 2 到 4 個字，不含 #，例如：人名、地名、品牌、食物、動物、交通、職業、身體、情緒、日常用語、時間）。不要用詞性（名詞、動詞、形容詞等）當標籤，詞性會另外記錄。請盡量沿用已存在的標籤："+JSON.stringify(Object.keys(ex))+"。只回傳 JSON 二維陣列（每個單字對應一個標籤字串陣列），長度必須等於單字數量，順序一一對應，不要任何其他文字。\n單字："+JSON.stringify(items.map(function(i){return i.zh+" / "+i.ko}));
     var out=await ai(p);
     var m=(out||"").match(/\[[\s\S]*\]/);
     var arr=JSON.parse(m[0]);
     return items.map(function(_,i){return parseTags(arr[i])});
   }catch(e){return none}
 }
+$("#tagpos").onclick=function(){
+  var names=POS_LIST.concat(["專有名詞"]),touched=0,moved=0,m=$("#tagposmsg");
+  words.forEach(function(w){
+    var keep=[],found=null,tg=tagsOf(w);
+    tg.forEach(function(t){if(names.indexOf(t)>=0){if(!found)found=t}else keep.push(t)});
+    if(!found)return;
+    if(!w.pos){w.pos=(found==="專有名詞"?"名詞":found);moved++}
+    w.tags=keep;delete w.cat;touched++;
+  });
+  if(!touched){m.textContent="沒有找到詞性標籤（名詞、動詞、形容詞…）。";return}
+  save();render();
+  m.textContent="✅ 已處理 "+touched+" 個單字：移除標籤裡的詞性"+(moved?"，其中 "+moved+" 個同時補上了詞性欄位。":"。");
+};
+$("#tidypos").onclick=async function(){
+  var b=this,m=$("#tidyposmsg");
+  if(!cfg.gem){m.textContent="要自動判斷詞性，請先在下面貼上 Gemini 金鑰。";return}
+  var t=words.filter(function(w){return !w.pos});
+  if(!t.length){m.textContent="每個單字都有詞性了。";return}
+  b.disabled=true;var done=0;
+  for(var i=0;i<t.length;i+=40){
+    m.textContent="判斷中… "+Math.min(i+40,t.length)+" / "+t.length;
+    var chunk=t.slice(i,i+40),ps=await classifyPos(chunk);
+    chunk.forEach(function(w,j){if(ps[j]){w.pos=ps[j];done++}});
+  }
+  save();render();b.disabled=false;
+  m.textContent=done?"✅ 已補上 "+done+" 個單字的詞性"+(done<t.length?"，另外 "+(t.length-done)+" 個判斷失敗，可以再按一次。":"。"):"自動判斷失敗，請稍後再試。";
+};
 $("#tidy").onclick=async function(){
   var b=this,m=$("#tidymsg");
   var t=words.filter(function(w){return !tagsOf(w).length});
@@ -895,6 +1100,511 @@ document.querySelectorAll("[data-a]").forEach(function(b){b.onclick=function(){
   syncAns();cur=null;flipped=false;resetAns();renderReview();
 }});
 syncAns();
+/* ---- pronunciation chart ---- */
+var LI=["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+var VI=["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
+var PROW=["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","ㄲ","ㄸ","ㅃ","ㅆ","ㅉ"];
+var HUE=[345,25,42,100,165,195,215,265,290,355,330,18,48,105,172,205,235,275,305];
+var V1=["ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ"],V2=["ㅐ","ㅒ","ㅔ","ㅖ","ㅘ","ㅙ","ㅚ","ㅝ","ㅞ","ㅟ","ㅢ"];
+var CR={"ㄱ":"g","ㄲ":"kk","ㄴ":"n","ㄷ":"d","ㄸ":"tt","ㄹ":"r","ㅁ":"m","ㅂ":"b","ㅃ":"pp","ㅅ":"s","ㅆ":"ss","ㅇ":"","ㅈ":"j","ㅉ":"jj","ㅊ":"ch","ㅋ":"k","ㅌ":"t","ㅍ":"p","ㅎ":"h"};
+var VR={"ㅏ":"a","ㅐ":"ae","ㅑ":"ya","ㅒ":"yae","ㅓ":"eo","ㅔ":"e","ㅕ":"yeo","ㅖ":"ye","ㅗ":"o","ㅘ":"wa","ㅙ":"wae","ㅚ":"oe","ㅛ":"yo","ㅜ":"u","ㅝ":"wo","ㅞ":"we","ㅟ":"wi","ㅠ":"yu","ㅡ":"eu","ㅢ":"ui","ㅣ":"i"};
+var CN={"ㄱ":"기역","ㄴ":"니은","ㄷ":"디귿","ㄹ":"리을","ㅁ":"미음","ㅂ":"비읍","ㅅ":"시옷","ㅇ":"이응","ㅈ":"지읒","ㅊ":"치읓","ㅋ":"키읔","ㅌ":"티읕","ㅍ":"피읖","ㅎ":"히읗","ㄲ":"쌍기역","ㄸ":"쌍디귿","ㅃ":"쌍비읍","ㅆ":"쌍시옷","ㅉ":"쌍지읒"};
+var G40=[
+  {t:"9 個平音子音",c:1,a:["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ"]},
+  {t:"5 個氣音子音",c:1,a:["ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"]},
+  {t:"5 個硬音子音",c:1,a:["ㄲ","ㄸ","ㅃ","ㅆ","ㅉ"]},
+  {t:"10 個單母音",c:0,a:["ㅏ","ㅓ","ㅗ","ㅜ","ㅡ","ㅣ","ㅐ","ㅔ","ㅚ","ㅟ"]},
+  {t:"6 個 Y 系列複合母音",c:0,a:["ㅑ","ㅕ","ㅛ","ㅠ","ㅒ","ㅖ"]},
+  {t:"5 個複合母音",c:0,a:["ㅘ","ㅝ","ㅙ","ㅞ","ㅢ"]}
+];
+var ptab="a";
+function psyl(c,v){return String.fromCharCode(0xAC00+(LI.indexOf(c)*21+VI.indexOf(v))*28)}
+function pcol(c){return "hsl("+HUE[PROW.indexOf(c)]+",62%,52%)"}
+function exWords(test){
+  return words.filter(function(w){
+    for(var i=0;i<w.ko.length;i++){var cc=w.ko.charCodeAt(i);if(cc>=0xAC00&&cc<=0xD7A3&&test(w.ko[i],cc-0xAC00))return true}
+    return false;
+  }).slice(0,6);
+}
+function openPop(o){
+  var ov=document.createElement("div");ov.className="ov";
+  ov.innerHTML='<div class="pwrap"><div class="pop"><div class="ptop"><div class="pbig" lang="ko"></div><button class="pspk" type="button" aria-label="發音"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button><div class="prom"></div><div class="pfor"></div></div><div class="pbot"><div class="pexh">例子（來自你的單字）</div><div class="pex"></div></div></div><button class="pclose" type="button" aria-label="關閉"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  document.body.appendChild(ov);
+  ov.querySelector(".pbig").textContent=o.big;
+  ov.querySelector(".prom").textContent=o.rom;
+  ov.querySelector(".pfor").textContent=o.formula;
+  var ex=ov.querySelector(".pex"),ws=exWords(o.test);
+  if(!ws.length){ex.innerHTML='<div class="exh" style="margin:0">沒有例子</div>'}
+  ws.forEach(function(w){
+    var d=document.createElement("div");d.className="pe";
+    var b=document.createElement("b");b.textContent=w.ko;b.lang="ko";
+    var sp=document.createElement("span");sp.textContent=w.zh;
+    d.appendChild(b);d.appendChild(sp);ex.appendChild(d);
+  });
+  ov.querySelector(".pspk").onclick=function(){speak(o.say)};
+  ov.querySelector(".pclose").onclick=function(){ov.remove()};
+  ov.onclick=function(e){if(e.target===ov)ov.remove()};
+  speak(o.say);
+}
+function popSyl(c,v){
+  var sy=psyl(c,v),ci=LI.indexOf(c),vi=VI.indexOf(v),rom=CR[c]+VR[v];
+  openPop({big:sy,rom:rom,say:sy,
+    formula:(c==="ㅇ"?"ㅇ(無聲)":c+"("+CR[c]+")")+" + "+v+"("+VR[v]+") = "+sy+"("+rom+")",
+    test:function(ch,off){return ch===sy}});
+}
+function popLetter(l,isC){
+  var demo=isC?psyl(l,"ㅏ"):psyl("ㅇ",l);
+  if(isC){
+    openPop({big:l,rom:(CR[l]||"（字首無聲，字尾 ng）")+"　"+CN[l],say:(clipURL[l]?l:demo),
+      formula:(l==="ㅇ"?"ㅇ(無聲)":l+"("+CR[l]+")")+" + ㅏ(a) = "+demo+"("+CR[l]+"a)　唸法示範：「"+demo+"」",
+      test:function(ch,off){return LI[Math.floor(off/588)]===l}});
+  }else{
+    openPop({big:l,rom:VR[l],say:(clipURL[l]?l:demo),
+      formula:"ㅇ(無聲) + "+l+"("+VR[l]+") = "+demo+"("+VR[l]+")　唸法示範：「"+demo+"」",
+      test:function(ch,off){return VI[Math.floor((off%588)/28)]===l}});
+  }
+}
+var FL=["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+var FREP={"ㄱ":"k","ㄲ":"k","ㄳ":"k","ㄴ":"n","ㄵ":"n","ㄶ":"n","ㄷ":"t","ㄹ":"l","ㄺ":"k","ㄻ":"m","ㄼ":"l","ㄽ":"l","ㄾ":"l","ㄿ":"p","ㅀ":"l","ㅁ":"m","ㅂ":"p","ㅄ":"p","ㅅ":"t","ㅆ":"t","ㅇ":"ng","ㅈ":"t","ㅊ":"t","ㅋ":"k","ㅌ":"t","ㅍ":"p","ㅎ":"t"};
+var FHUE={"k":345,"n":28,"t":100,"l":170,"m":215,"p":265,"ng":300};
+var REPS=[{s:"k",a:["ㄱ","ㅋ","ㄲ"]},{s:"n",a:["ㄴ"]},{s:"t",a:["ㄷ","ㅅ","ㅆ","ㅈ","ㅊ","ㅌ","ㅎ"]},{s:"l",a:["ㄹ"]},{s:"m",a:["ㅁ"]},{s:"p",a:["ㅂ","ㅍ"]},{s:"ng",a:["ㅇ"]}];
+var fL="ㄱ",fV="ㅏ";
+function fsyl(c,v,f){return String.fromCharCode(0xAC00+(LI.indexOf(c)*21+VI.indexOf(v))*28+FL.indexOf(f))}
+function fcol(f){return "var(--tx)"}
+function popFinal(c,v,f){
+  var sy=fsyl(c,v,f),rom=CR[c]+VR[v]+(f?FREP[f]:"");
+  var fm=(c==="ㅇ"?"ㅇ(無聲)":c+"("+CR[c]+")")+" + "+v+"("+VR[v]+(f?") + "+f+"(尾音念 "+FREP[f]+")":")")+" = "+sy+"("+rom+")";
+  if(f&&f.length&&"ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ".indexOf(f)>=0)fm+="　（兩個子音的尾音，只念其中一個）";
+  if(f&&"ㅋㄲ".indexOf(f)>=0)fm+="　（"+f+" 放在字尾，念法跟 ㄱ 一樣）";
+  openPop({big:sy,rom:rom,say:sy,formula:fm,test:function(ch){return ch===sy}});
+}
+function renderFinals(box){
+  var t1=document.createElement("div");t1.className="pgt";t1.textContent="尾音的寫法有很多種，但只會念成這 7 個音。點一下聽聽看，同一組的音都一樣。";box.appendChild(t1);
+  REPS.forEach(function(g){
+    var card=document.createElement("div");card.className="tcard";
+    var sn=document.createElement("div");sn.className="tsnd";sn.textContent=g.s;sn.style.color="var(--cp)";card.appendChild(sn);
+    var mem=document.createElement("div");mem.className="tmem";
+    g.a.forEach(function(f){
+      var b=document.createElement("button");b.type="button";b.className="tm";
+      b.innerHTML='<span class="tsy"></span><span class="tj"></span>';
+      b.querySelector(".tsy").textContent=fsyl("ㄱ","ㅏ",f);b.querySelector(".tsy").style.color=fcol(f);
+      b.querySelector(".tj").textContent=f;
+      b.onclick=function(){popFinal("ㄱ","ㅏ",f)};
+      mem.appendChild(b);
+    });
+    card.appendChild(mem);box.appendChild(card);
+  });
+  var t2=document.createElement("div");t2.className="pgt";t2.style.marginTop="22px";t2.textContent="組字練習：選一個子音和一個母音，看它加上每一種尾音的樣子";box.appendChild(t2);
+  var fr=document.createElement("div");fr.className="frow";
+  function mkSel(id,list,val,lab){
+    var l=document.createElement("span");l.className="fcap";l.textContent=lab;fr.appendChild(l);
+    var s2=document.createElement("select");s2.id=id;
+    list.forEach(function(x){var o=document.createElement("option");o.value=x;o.textContent=lab==="子音"?x+"（"+(CR[x]||"無聲")+"）":x+"（"+VR[x]+"）";s2.appendChild(o)});
+    s2.value=val;fr.appendChild(s2);return s2;
+  }
+  var sc=mkSel("pfL",PROW,fL,"子音"),sv=mkSel("pfV",V1.concat(V2),fV,"母音");
+  box.appendChild(fr);
+  var grid=document.createElement("div");grid.className="fg";box.appendChild(grid);
+  function draw(){
+    grid.innerHTML="";
+    FL.forEach(function(f){
+      var b=document.createElement("button");b.type="button";b.className="fk";
+      b.innerHTML='<span class="tsy"></span><span class="tj"></span>';
+      b.querySelector(".tsy").textContent=fsyl(fL,fV,f);b.querySelector(".tsy").style.color=fcol(f);
+      b.querySelector(".tj").textContent=f?f+" · "+FREP[f]:"無尾音";
+      b.onclick=function(){popFinal(fL,fV,f)};
+      grid.appendChild(b);
+    });
+  }
+  sc.onchange=function(){fL=this.value;draw()};sv.onchange=function(){fV=this.value;draw()};
+  draw();
+}
+function renderPron(){
+  var box=$("#pgrid");box.innerHTML="";updateVWarn();
+  $("#phint").textContent=ptab==="t"?"":pronHintText();
+  document.querySelectorAll("[data-pt]").forEach(function(b){b.classList.toggle("on",b.dataset.pt===ptab)});
+  if(ptab==="t"){renderFinals(box);return}
+  if(ptab==="f"){
+    G40.forEach(function(g){
+      var t=document.createElement("div");t.className="pgt";t.textContent=g.t;box.appendChild(t);
+      var row=document.createElement("div");row.className="pg";
+      g.a.forEach(function(l){
+        var b=document.createElement("button");b.type="button";b.className="pk";b.textContent=l;
+        b.style.color=g.c?"var(--cp)":"var(--cb)";
+        b.onclick=function(){popLetter(l,g.c)};
+        row.appendChild(b);
+      });
+      box.appendChild(row);
+    });
+    return;
+  }
+  var vs=ptab==="a"?V1:V2,t=document.createElement("table");t.className="pt";t.style.setProperty("--n",vs.length);
+  var h="<tr><th class=\"rh\"></th>"+vs.map(function(v){return "<th><span class=\"ptv\">"+v+"</span><span class=\"ptr\">"+VR[v]+"</span></th>"}).join("")+"</tr>";
+  t.innerHTML=h;
+  PROW.forEach(function(c){
+    var tr=document.createElement("tr"),th=document.createElement("th");
+    th.className="rh";th.innerHTML='<span class="ptc"></span><span class="ptr"></span>';th.querySelector(".ptc").textContent=c;th.querySelector(".ptr").textContent=(c==="ㅇ"?"silent":CR[c]);tr.appendChild(th);
+    vs.forEach(function(v){
+      var td=document.createElement("td"),b=document.createElement("button");
+      b.type="button";b.className="pc";b.innerHTML='<span class="pts"></span><span class="ptq"></span>';b.querySelector(".pts").textContent=psyl(c,v);b.querySelector(".ptq").textContent=CR[c]+VR[v];
+      b.onclick=function(){popSyl(c,v)};
+      td.appendChild(b);tr.appendChild(td);
+    });
+    t.appendChild(tr);
+  });
+  box.appendChild(t);
+}
+document.querySelectorAll("[data-pt]").forEach(function(b){b.onclick=function(){ptab=b.dataset.pt;renderPron()}});
+renderPron();
+/* ---- imported book audio (device only) ---- */
+function pronHintText(){var n=Object.keys(clipURL).length;return "點一下任何一個字，就會念出來。"+(n?"（已使用書附錄音："+n+" 個音）":"")}
+var AUDB=null;
+function auOpen(){return new Promise(function(res,rej){
+  if(!window.indexedDB){rej(new Error("no idb"));return}
+  var r=indexedDB.open("krflash-audio",1);
+  r.onupgradeneeded=function(){r.result.createObjectStore("clips")};
+  r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)};
+})}
+function auTx(mode,fn){return auOpen().then(function(db){return new Promise(function(res,rej){
+  var tx=db.transaction("clips",mode),st=tx.objectStore("clips"),out=fn(st);
+  tx.oncomplete=function(){res(out&&out.result!==undefined?out.result:out)};tx.onerror=function(){rej(tx.error)};
+})})}
+function wavBlob(i16,rate){
+  var n=i16.length,buf=new ArrayBuffer(44+n*2),v=new DataView(buf);
+  function w(o,t){for(var i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))}
+  w(0,"RIFF");v.setUint32(4,36+n*2,true);w(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,n*2,true);
+  new Int16Array(buf,44,n).set(i16);
+  return new Blob([buf],{type:"audio/wav"});
+}
+function setClip(key,rec){
+  if(clipURL[key])URL.revokeObjectURL(clipURL[key]);
+  clipURL[key]=URL.createObjectURL(wavBlob(new Int16Array(rec.pcm),rec.rate));
+}
+function auRefresh(){
+  var n=Object.keys(clipURL).length;
+  $("#austat").textContent=n?"這台裝置已匯入 "+n+" 個音節的錄音。":"這台裝置還沒有匯入錄音。";
+  if(typeof renderPron==="function")renderPron();
+}
+function auLoadAll(){
+  auTx("readonly",function(st){
+    var out=[],rq=st.openCursor();
+    rq.onsuccess=function(){var c=rq.result;if(c){out.push([c.key,c.value]);c.continue()}};
+    return {get result(){return out}};
+  }).then(function(list){list.forEach(function(kv){setClip(kv[0],kv[1])});auRefresh()},function(){auRefresh()});
+}
+var auCur=null,auClips=[],auQ=[],auI=0,auPrev={};
+var auCtx=null;
+function auDecode(ab){
+  if(!auCtx){var C=window.AudioContext||window.webkitAudioContext;auCtx=new C()}
+  return new Promise(function(res,rej){var p=auCtx.decodeAudioData(ab,res,rej);if(p&&p.then)p.then(res,rej)}).then(function(buf){
+    var n=buf.length,ch=new Float32Array(n);
+    for(var c=0;c<buf.numberOfChannels;c++){var d=buf.getChannelData(c);for(var i=0;i<n;i++)ch[i]+=d[i]/buf.numberOfChannels}
+    return {ch:ch,rate:buf.sampleRate};
+  });
+}
+function auDetect(ch,rate,sens){
+  var win=Math.max(1,Math.round(rate*0.01)),n=Math.floor(ch.length/win),rms=new Float32Array(n);
+  for(var i=0;i<n;i++){var sum=0;for(var k=0;k<win;k++){var x=ch[i*win+k];sum+=x*x}rms[i]=Math.sqrt(sum/win)}
+  var sorted=Array.prototype.slice.call(rms).sort(function(a,b){return a-b}),peak=sorted[Math.floor(sorted.length*0.99)]||0;
+  var thr=peak*sens,segs=[],cur=null;
+  for(var j=0;j<n;j++){
+    if(rms[j]>thr){if(!cur)cur={s:j,e:j};else cur.e=j}
+    else if(cur&&j-cur.e>25){segs.push(cur);cur=null}
+  }
+  if(cur)segs.push(cur);
+  segs=segs.filter(function(g){return g.e-g.s>=12});
+  return segs.map(function(g){return {s:Math.max(0,g.s*win-Math.round(rate*0.04)),e:Math.min(ch.length,(g.e+1)*win+Math.round(rate*0.1))}});
+}
+function auSlice(ch,rate,g){
+  var n=g.e-g.s,pk=0,i;
+  for(i=0;i<n;i++){var a=Math.abs(ch[g.s+i]);if(a>pk)pk=a}
+  var gain=pk>0?Math.min(4,0.9/pk):1,out=new Int16Array(n),fi=Math.round(rate*0.005),fo=Math.round(rate*0.01);
+  for(i=0;i<n;i++){
+    var v=ch[g.s+i]*gain;
+    if(i<fi)v*=i/fi;if(n-i<fo)v*=(n-i)/fo;
+    out[i]=Math.max(-32768,Math.min(32767,Math.round(v*32767)));
+  }
+  return out;
+}
+function auTokens(){return $("#aulist").value.trim().split(/\s+/).filter(Boolean)}
+function auRender(){
+  var box=$("#auclips"),tk=auTokens();box.innerHTML="";
+  auClips.forEach(function(g,i){
+    var b=document.createElement("button");b.type="button";b.className="auc"+(tk[i]?"":" bad");
+    b.innerHTML="<span></span><small></small>";
+    b.firstChild.textContent=tk[i]||"？";b.lastChild.textContent=(i+1)+"　"+((g.e-g.s)/auCur.rate).toFixed(2)+"s";
+    b.onclick=function(){
+      if(!auPrev[i])auPrev[i]=URL.createObjectURL(wavBlob(auSlice(auCur.ch,auCur.rate,g),auCur.rate));
+      try{if(curAudio)curAudio.pause()}catch(e){}
+      curAudio=new Audio(auPrev[i]);var p=curAudio.play();if(p&&p.catch)p.catch(function(){});
+    };
+    box.appendChild(b);
+  });
+  var m=$("#aumsg");
+  m.textContent=!tk.length?"請在上面輸入這一軌的音節，或用「填入」快速產生。":(tk.length===auClips.length?"✅ 切出 "+auClips.length+" 段，音節 "+tk.length+" 個，數量相符。點每個按鈕聽聽看對不對。":"⚠️ 切出 "+auClips.length+" 段，但音節有 "+tk.length+" 個，數量不一樣。可以調靈敏度，或修改音節清單；儲存時只會存前 "+Math.min(auClips.length,tk.length)+" 個。");
+}
+function auDetectAgain(){
+  Object.keys(auPrev).forEach(function(k){URL.revokeObjectURL(auPrev[k])});auPrev={};
+  auClips=auDetect(auCur.ch,auCur.rate,(+$("#ausens").value)/100);
+  $("#auinfo").textContent=auCur.name+"（"+(auI+1)+" / "+auQ.length+"）：找到 "+auClips.length+" 段，全長 "+(auCur.ch.length/auCur.rate).toFixed(1)+" 秒";
+  auRender();
+}
+function auLoad(i){
+  auI=i;var f=auQ[i];$("#aupanel").hidden=false;$("#auinfo").textContent="讀取 "+f.name+" …";$("#auclips").innerHTML="";
+  var rd=new FileReader();
+  rd.onload=function(){
+    auDecode(rd.result).then(function(d){auCur={name:f.name,ch:d.ch,rate:d.rate};auDetectAgain()},function(){$("#auinfo").textContent="這個檔案無法讀取："+f.name})
+  };
+  rd.readAsArrayBuffer(f);
+}
+$("#aupick").onclick=function(){$("#aufile").click()};
+$("#aufile").onchange=function(){
+  auQ=Array.prototype.slice.call(this.files).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true})});
+  this.value="";if(auQ.length)auLoad(0);
+};
+$("#aupick2").onclick=function(){$("#aufile2").click()};
+$("#aufile2").onchange=async function(){
+  var files=Array.prototype.slice.call(this.files);this.value="";
+  if(!files.length)return;
+  var m=$("#aumsg2"),recs=[],skip=[];
+  function readAB(f){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(r.result)};r.onerror=rej;r.readAsArrayBuffer(f)})}
+  for(var i=0;i<files.length;i++){
+    m.textContent="處理中 "+(i+1)+" / "+files.length+"…";
+    var nm=files[i].name.normalize("NFC").replace(/\.[^.]+$/,""),mm=nm.match(/[가-힣ㄱ-ㅎㅏ-ㅣ]+/);
+    if(!mm){skip.push(files[i].name);continue}
+    try{
+      var d=await auDecode(await readAB(files[i])),segs=auDetect(d.ch,d.rate,0.04);
+      var g=segs.length?{s:segs[0].s,e:segs[segs.length-1].e}:{s:0,e:d.ch.length};
+      recs.push([mm[0],{rate:d.rate,pcm:auSlice(d.ch,d.rate,g).buffer}]);
+    }catch(e){skip.push(files[i].name)}
+  }
+  if(!recs.length){m.textContent="沒有可以匯入的檔案。檔名裡要有韓文音節，例如 아.mp3。"+(skip.length?"（略過："+skip.slice(0,5).join("、")+(skip.length>5?"…":"")+"）":"");return}
+  auTx("readwrite",function(st){recs.forEach(function(r){st.put(r[1],r[0])})}).then(function(){
+    recs.forEach(function(r){setClip(r[0],r[1])});auRefresh();
+    m.textContent="✅ 已匯入 "+recs.length+" 個音節的錄音。"+(skip.length?"略過 "+skip.length+" 個檔案（檔名裡找不到韓文音節，或讀不出來）："+skip.slice(0,5).join("、")+(skip.length>5?"…":""):"");
+  },function(){m.textContent="儲存失敗：這個瀏覽器可能不允許儲存（例如無痕模式）。"});
+};
+$("#ausens").oninput=function(){if(auCur)auDetectAgain()};
+$("#aulist").oninput=function(){if(auCur)auRender()};
+(function(){
+  var sc=$("#auc"),sv=$("#auv");
+  PROW.forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c+" 行";sc.appendChild(o)});
+  [["v1","ㅏ~ㅣ（10 個母音）"],["v2","ㅐ~ㅢ（11 個母音）"],["v12","全部 21 個母音（ㅏ~ㅣ 再 ㅐ~ㅢ）"],["vu","全部 21 個母音（ㅏ ㅐ ㅑ ㅒ… 字母表順序）"],["fin","ㅏ 加 28 種尾音（가 각 갂…）"]].forEach(function(p){var o=document.createElement("option");o.value=p[0];o.textContent=p[1];sv.appendChild(o)});
+  sc.value="ㅇ";sv.value="v12";
+  $("#aufill").onclick=function(){
+    var c=sc.value,k=sv.value,vs;
+    if(k==="fin"){$("#aulist").value=FL.map(function(f){return fsyl(c,"ㅏ",f)}).join(" ")}
+    else{vs=k==="v1"?V1:k==="v2"?V2:k==="v12"?V1.concat(V2):VI;$("#aulist").value=vs.map(function(v){return psyl(c,v)}).join(" ")}
+    if(auCur)auRender();
+  };
+})();
+$("#ausave").onclick=function(){
+  if(!auCur)return;
+  var tk=auTokens(),n=Math.min(tk.length,auClips.length),b=this,m=$("#aumsg");
+  if(!n){m.textContent="沒有可以儲存的內容，請先輸入音節。";return}
+  b.disabled=true;m.textContent="儲存中…";
+  var recs=[];for(var i=0;i<n;i++)recs.push([tk[i],{rate:auCur.rate,pcm:auSlice(auCur.ch,auCur.rate,auClips[i]).buffer}]);
+  auTx("readwrite",function(st){recs.forEach(function(r){st.put(r[1],r[0])})}).then(function(){
+    recs.forEach(function(r){setClip(r[0],r[1])});auRefresh();b.disabled=false;
+    if(auI+1<auQ.length){auLoad(auI+1);$("#aumsg").textContent="✅ 上一軌已儲存 "+n+" 個音。這是下一軌。"}
+    else{m.textContent="✅ 已儲存 "+n+" 個音節的錄音。去「發音」點點看。";$("#auinfo").textContent="全部完成"}
+  },function(){b.disabled=false;m.textContent="儲存失敗：這個瀏覽器可能不允許儲存（例如無痕模式）。"});
+};
+$("#auclear").onclick=function(){
+  ask("清除這台裝置上所有已匯入的音檔？（網站和單字不受影響）").then(function(ok){
+    if(!ok)return;
+    auTx("readwrite",function(st){st.clear()}).then(function(){Object.keys(clipURL).forEach(function(k){URL.revokeObjectURL(clipURL[k])});clipURL={};auRefresh()});
+  });
+};
+auLoadAll();
+/* ---- zip + mapping import ---- */
+function zipEntries(file){
+  var size=file.size,tl=Math.min(size,65557);
+  return file.slice(size-tl,size).arrayBuffer().then(function(ab){
+    var dv=new DataView(ab),e=-1;
+    for(var i=ab.byteLength-22;i>=0;i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break}}
+    if(e<0)throw new Error("not a zip");
+    var n=dv.getUint16(e+10,true),cdSize=dv.getUint32(e+12,true),cdOff=dv.getUint32(e+16,true);
+    if(cdOff===0xFFFFFFFF||n===0xFFFF)throw new Error("zip64");
+    return file.slice(cdOff,cdOff+cdSize).arrayBuffer().then(function(cb){
+      var cd=new DataView(cb),u8=new Uint8Array(cb),p=0,out=[];
+      while(p+46<=cb.byteLength&&cd.getUint32(p,true)===0x02014b50){
+        var flags=cd.getUint16(p+8,true),method=cd.getUint16(p+10,true),comp=cd.getUint32(p+20,true),nl=cd.getUint16(p+28,true),xl=cd.getUint16(p+30,true),cl=cd.getUint16(p+32,true),off=cd.getUint32(p+42,true);
+        var nb=u8.subarray(p+46,p+46+nl),name;
+        try{name=new TextDecoder(flags&0x800?"utf-8":"utf-8",{fatal:false}).decode(nb)}catch(x){name=String.fromCharCode.apply(null,nb)}
+        out.push({name:name,method:method,comp:comp,off:off});
+        p+=46+nl+xl+cl;
+      }
+      return out;
+    });
+  });
+}
+function zipRead(file,e){
+  return file.slice(e.off,e.off+30).arrayBuffer().then(function(lh){
+    var d=new DataView(lh),start=e.off+30+d.getUint16(26,true)+d.getUint16(28,true),blob=file.slice(start,start+e.comp);
+    if(e.method===0)return blob.arrayBuffer();
+    if(e.method===8){
+      if(typeof DecompressionStream==="undefined")throw new Error("no DecompressionStream");
+      return new Response(blob.stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer();
+    }
+    throw new Error("method "+e.method);
+  });
+}
+function colIdx(r){var m=/^([A-Z]+)/.exec(r)[1],n=0;for(var i=0;i<m.length;i++)n=n*26+m.charCodeAt(i)-64;return n-1}
+function readXlsxRows(file){
+  return zipEntries(file).then(function(ents){
+    var by={};ents.forEach(function(e){by[e.name]=e});
+    var txt=function(n){return zipRead(file,by[n]).then(function(ab){return new TextDecoder("utf-8").decode(ab)})};
+    var sheets=ents.map(function(e){return e.name}).filter(function(n){return /^xl\/worksheets\/sheet\d+\.xml$/.test(n)}).sort(function(a,b){return a.localeCompare(b,undefined,{numeric:true})});
+    var ssP=by["xl/sharedStrings.xml"]?txt("xl/sharedStrings.xml"):Promise.resolve("");
+    return ssP.then(function(sx){
+      var ss=[];
+      if(sx){var xd=new DOMParser().parseFromString(sx,"application/xml"),sis=xd.getElementsByTagName("si");
+        for(var i=0;i<sis.length;i++){var ts=sis[i].getElementsByTagName("t"),t="";for(var k=0;k<ts.length;k++)t+=ts[k].textContent;ss.push(t)}}
+      var chain=Promise.resolve(null);
+      sheets.forEach(function(sn){chain=chain.then(function(found){
+        if(found)return found;
+        return txt(sn).then(function(x){
+          var doc=new DOMParser().parseFromString(x,"application/xml"),rows=[],rs=doc.getElementsByTagName("row");
+          for(var i=0;i<rs.length;i++){
+            var arr=[],cs=rs[i].getElementsByTagName("c");
+            for(var j=0;j<cs.length;j++){
+              var c=cs[j],t=c.getAttribute("t"),v=c.getElementsByTagName("v")[0],val="";
+              if(t==="s"&&v)val=ss[+v.textContent]||"";
+              else if(t==="inlineStr"){var tt=c.getElementsByTagName("t");for(var q=0;q<tt.length;q++)val+=tt[q].textContent}
+              else if(v)val=v.textContent;
+              arr[colIdx(c.getAttribute("r"))]=val;
+            }
+            rows.push(arr);
+          }
+          return rows.length&&String(rows[0][0]||"").trim()==="檔名"?rows:null;
+        });
+      })});
+      return chain;
+    });
+  });
+}
+function parseDelim(text){
+  return text.replace(/^\uFEFF/,"").split(/\r?\n/).filter(function(l){return l.trim()}).map(function(l){
+    if(l.indexOf("\t")>=0)return l.split("\t");
+    var out=[],cur="",q=false;
+    for(var i=0;i<l.length;i++){var ch=l[i];
+      if(q){if(ch==='"'){if(l[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}
+      else if(ch==='"')q=true;else if(ch===","){out.push(cur);cur=""}else cur+=ch}
+    out.push(cur);return out;
+  });
+}
+function amParse(c){
+  c=String(c||"").trim();
+  if(/[（(]/.test(c)){
+    var items=[],re=/([^（(）)]+?)\s*[（(][^）)]*[）)]/g,m;
+    while((m=re.exec(c))){var t=m[1].trim();if(t)items.push(t)}
+    return {items:items,kind:"w"};
+  }
+  return {items:c.split(/\s+/).filter(Boolean),kind:"s"};
+}
+var amMap={};
+function amSetMap(rows){
+  amMap={};var n=0;
+  rows.forEach(function(r){
+    var nm=String(r[0]||"").trim();if(!nm||nm==="檔名")return;
+    var p=amParse(r[1]);if(!p.items.length)return;
+    amMap[nm.toLowerCase()]=p;n++;
+  });
+  return n;
+}
+function amShowMap(){
+  var n=Object.keys(amMap).length,s1=0,w=0;
+  Object.keys(amMap).forEach(function(k){amMap[k].kind==="s"?s1++:w++});
+  $("#ammapmsg").textContent=n?"已載入對照表：共 "+n+" 軌（發音類 "+s1+" 軌、單字與句子類 "+w+" 軌）。":"還沒有載入對照表。";
+}
+(function(){
+  try{var raw=localStorage.getItem(LS+"-amap");if(raw)amSetMap(JSON.parse(raw))}catch(e){}
+  amShowMap();
+})();
+$("#ammappick").onclick=function(){$("#ammapf").click()};
+$("#ammapf").onchange=function(){
+  var f=this.files[0];this.value="";if(!f)return;
+  var m=$("#ammapmsg");m.textContent="讀取中…";
+  var p=/\.xlsx$/i.test(f.name)?readXlsxRows(f):f.text().then(parseDelim);
+  p.then(function(rows){
+    if(!rows||!rows.length){m.textContent="讀不到對照表。請確認第一欄標題是「檔名」。";return}
+    var n=amSetMap(rows);
+    if(!n){m.textContent="沒有讀到有效的列。第一欄是檔名，第二欄是內容。";return}
+    try{localStorage.setItem(LS+"-amap",JSON.stringify(rows.map(function(r){return [r[0],r[1]]})))}catch(e){}
+    amShowMap();
+  },function(){m.textContent="無法讀取這個檔案。"});
+};
+function amStore(ch,rate,g){
+  var f=Math.max(1,Math.round(rate/22050)),n=Math.floor((g.e-g.s)/f),pk=0,i,k,tmp=new Float32Array(n);
+  for(i=0;i<n;i++){var sm=0;for(k=0;k<f;k++)sm+=ch[g.s+i*f+k];tmp[i]=sm/f;var a=Math.abs(tmp[i]);if(a>pk)pk=a}
+  var gain=pk>0?Math.min(4,0.9/pk):1,r2=Math.round(rate/f),fi=Math.round(r2*0.005),fo=Math.round(r2*0.01),out=new Int16Array(n);
+  for(i=0;i<n;i++){var v=tmp[i]*gain;if(i<fi)v*=i/fi;if(n-i<fo)v*=(n-i)/fo;out[i]=Math.max(-32768,Math.min(32767,Math.round(v*32767)))}
+  return {rate:r2,pcm:out.buffer};
+}
+function amSplit(d,items){
+  var sens=[0.04,0.02,0.08,0.01,0.12,0.2];
+  if(items.length===1){
+    var sg=auDetect(d.ch,d.rate,0.04);
+    return sg.length?[{s:sg[0].s,e:sg[sg.length-1].e}]:[{s:0,e:d.ch.length}];
+  }
+  var best=0;
+  for(var i=0;i<sens.length;i++){var g=auDetect(d.ch,d.rate,sens[i]);if(g.length===items.length)return g;if(!best)best=g.length}
+  return {mismatch:auDetect(d.ch,d.rate,0.04).length};
+}
+var amBusy=false;
+$("#amzippick").onclick=function(){$("#amzipf").click()};
+$("#amzipf").onchange=async function(){
+  var files=Array.prototype.slice.call(this.files);this.value="";
+  if(!files.length||amBusy)return;
+  amBusy=true;
+  var m=$("#amzipmsg"),rep=$("#amrep"),o1=$("#amk1").checked,o2=$("#amk2").checked,last=$("#amdup").value==="last";
+  var st={ok:0,clips:0,bad:[],unmapped:0,skipCat:0,dup:[],err:[],seen:{},names:{}};
+  rep.textContent="";
+  try{
+    for(var z=0;z<files.length;z++){
+      var ents;
+      try{ents=await zipEntries(files[z])}catch(e){st.err.push(files[z].name+"：讀不到這個 zip（"+(e.message==="zip64"?"檔案太大，請分成幾個小一點的 zip":"格式不支援")+"）");continue}
+      ents=ents.filter(function(e){return /\.(mp3|wav|m4a|ogg|aac|mp4)$/i.test(e.name)});
+      for(var i=0;i<ents.length;i++){
+        var e=ents[i],base=e.name.split("/").pop().toLowerCase(),row=amMap[base];
+        m.textContent="處理中："+files[z].name+"（"+(i+1)+" / "+ents.length+"）　已存入 "+st.clips+" 個音";
+        if(!row){
+          var hm=base.replace(/\.[^.]+$/,"").match(/^[가-힣ㄱ-ㅎㅏ-ㅣ]+/);
+          if(hm)row={items:[hm[0]],kind:"s"};else{st.unmapped++;continue}
+        }
+        if(!((row.kind==="s"&&o1)||(row.kind==="w"&&o2))){st.skipCat++;continue}
+        try{
+          var d=await auDecode(await zipRead(files[z],e)),segs=amSplit(d,row.items);
+          if(segs.mismatch!==undefined){st.bad.push(base+"：對照表有 "+row.items.length+" 項，聲音切出 "+segs.mismatch+" 段");continue}
+          var recs=[];
+          for(var k=0;k<row.items.length;k++){
+            var key=row.items[k];
+            if(!last&&(clipURL[key]||st.seen[key])){st.dup.push(key+"（"+base+"）");continue}
+            st.seen[key]=1;recs.push([key,amStore(d.ch,d.rate,segs[k])]);
+          }
+          if(recs.length){
+            await auTx("readwrite",function(os){recs.forEach(function(r){os.put(r[1],r[0])})});
+            recs.forEach(function(r){setClip(r[0],r[1])});st.clips+=recs.length;
+          }
+          st.ok++;
+        }catch(err){st.err.push(base+"：處理失敗（"+(err&&err.message==="no DecompressionStream"?"這個瀏覽器太舊，不支援讀取壓縮的 zip":"檔案無法解碼")+"）")}
+      }
+    }
+  }finally{amBusy=false}
+  auRefresh();
+  m.textContent="✅ 完成：處理成功 "+st.ok+" 軌，共存入 "+st.clips+" 個音。";
+  var L=[];
+  L.push("匯入報告");
+  L.push("・成功："+st.ok+" 軌，存入 "+st.clips+" 個音");
+  if(st.skipCat)L.push("・依你勾選的類別略過："+st.skipCat+" 軌");
+  if(st.unmapped)L.push("・zip 裡有、但對照表沒有的檔案："+st.unmapped+" 個");
+  if(st.bad.length)L.push("・段數對不上，沒有匯入（"+st.bad.length+" 軌）：\n    "+st.bad.slice(0,25).join("\n    ")+(st.bad.length>25?"\n    …還有 "+(st.bad.length-25)+" 軌":""));
+  if(st.dup.length)L.push("・同一個音已經有錄音，略過（"+st.dup.length+" 個）："+st.dup.slice(0,12).join("、")+(st.dup.length>12?"…":""));
+  if(st.err.length)L.push("・錯誤：\n    "+st.err.slice(0,10).join("\n    "));
+  rep.textContent=L.join("\n");
+};
 var stf="all",sd=[],si=0,sdKey=null;
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function stDeal(avoid){
@@ -975,7 +1685,7 @@ $("#stnext").onclick=stNext;
 document.addEventListener("keydown",function(e){
   if(!$("#study").hidden&&!e.repeat&&!document.querySelector(".ov")&&!/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)&&(e.key==="Enter"||e.key==="ArrowRight")){e.preventDefault();stNext()}
 });
-function render(){renderCatSel();renderStSel();renderStudy();renderReview();renderList();renderStats()}
+function render(){fillVoiceSel();renderCatSel();renderStSel();renderStudy();renderReview();renderList();renderStats()}
 function updatePill(){
   var t=$("#syncmsg").textContent,p=$("#syncpill");
   p.textContent=t.indexOf("☁️ 已同步")===0?"☁️ 已同步":(t.indexOf("☁️ 連線")===0||t.indexOf("☁️ 同步中")===0)?"⏳ 連線中":t.indexOf("⚠️")===0?"⚠️ 同步失敗":"💾 僅存本機";
@@ -983,6 +1693,15 @@ function updatePill(){
 new MutationObserver(updatePill).observe($("#syncmsg"),{childList:true,characterData:true,subtree:true});
 $("#syncpill").onclick=function(){ask($("#syncmsg").textContent||"尚未連線")};
 $("#stoken").value=cfg.token||"";$("#sgist").value=cfg.gist||"";$("#sgem").value=cfg.gem||"";$("#smodel").value=cfg.model||"";
+(function(){
+  var r=$("#srate"),lab=$("#srateval");
+  r.value=(cfg.rate>0?cfg.rate:0.85);lab.textContent=(+r.value).toFixed(2);
+  r.oninput=function(){cfg.rate=parseFloat(this.value);lab.textContent=(+this.value).toFixed(2);saveCfg()};
+  $("#svoice").onchange=function(){cfg.voice=this.value;saveCfg();pickVoice()};
+  $("#vt1").onclick=function(){speak("며")};
+  $("#vt2").onclick=function(){speak("안녕하세요")};
+  fillVoiceSel();
+})();
 $("#ssave").onclick=async function(){
   var b=this,prev=cfg.gist||"";
   cfg.token=$("#stoken").value.trim();cfg.gist=$("#sgist").value.trim();saveCfg();
@@ -1021,7 +1740,7 @@ $("#impf").onchange=function(){
     try{
       var d=JSON.parse(rd.result),arr=Array.isArray(d)?d:d.words,n=0,have={};
       words.forEach(function(w){have[key(w)]=1});
-      arr.forEach(function(w){if(w&&w.zh&&w.ko&&!have[key(w)]){var x=mk(w.zh,w.ko,w.tags||w.cat);x.ok=w.ok||0;x.no=w.no||0;x.streak=w.streak||0;words.push(x);have[key(w)]=1;n++}});
+      arr.forEach(function(w){if(w&&w.zh&&w.ko&&!have[key(w)]){var x=mk(w.zh,w.ko,w.tags||w.cat);x.ok=w.ok||0;x.no=w.no||0;x.streak=w.streak||0;x.pos=w.pos||"";words.push(x);have[key(w)]=1;n++}});
       save();render();$("#bstat").textContent="✅ 匯入 "+n+" 個新單字。";
     }catch(e){$("#bstat").textContent="讀不到這個檔案，請選擇之前匯出的 .json。"}
   };
