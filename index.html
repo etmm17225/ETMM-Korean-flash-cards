@@ -489,7 +489,7 @@ function gh(path,opt){
     return r.json();
   });
 }
-function body(){return JSON.stringify({rev:rev,words:words})}
+function body(){return JSON.stringify({rev:rev,words:words,sort:(typeof sk==="string"?sk:"manual")})}
 function save(){localSave();setRev(Date.now());schedulePush()}
 function schedulePush(){if(!cfg.token||!cfg.gist)return;clearTimeout(pushT);pushT=setTimeout(push,1200)}
 function push(){
@@ -503,6 +503,10 @@ function push(){
   ).then(function(){pushing=false;if(again){again=false;push()}});
 }
 function seed(){return SEED.map(function(p){return mk(p[0],p[1],p[2])})}
+function adoptSort(v){
+  if(typeof v!=="string"||typeof SORTS==="undefined"||!SORTS[v]||v===sk)return;
+  sk=v;try{localStorage.setItem(LS+"-sort",v)}catch(e){}
+}
 function applyWords(w){
   words=clone(w);
   words.forEach(function(x){if(x.pos==="專有名詞")x.pos="名詞"});
@@ -521,10 +525,11 @@ async function pull(){
   if(!hadSynced()){
     var merged=clone(cw),have={},ids={};
     merged.forEach(function(w){have[key(w)]=1;ids[w.id]=1});
-    words.forEach(function(w){if(!ids[w.id]&&!have[key(w)]){merged.push(w);have[key(w)]=1}});
-    applyWords(merged);localSave();setRev(Date.now());markSynced(true);push();
+    var seedKeys={};SEED.forEach(function(p){seedKeys[p[0]+"|"+p[1]]=1});
+    words.forEach(function(w){if(!ids[w.id]&&!have[key(w)]&&!(seedKeys[key(w)]&&!(w.ok||w.no))){merged.push(w);have[key(w)]=1}});
+    adoptSort(remote.sort);applyWords(merged);localSave();setRev(Date.now());markSynced(true);push();
   }else if(crev>rev){
-    applyWords(cw);localSave();setRev(crev);
+    adoptSort(remote.sort);applyWords(cw);localSave();setRev(crev);
   }else if(rev>crev){
     push();
   }
@@ -545,7 +550,7 @@ async function connect(){
   }
 }
 document.addEventListener("visibilitychange",function(){
-  if(!document.hidden&&cfg.token&&cfg.gist&&!pushing&&Date.now()-lastPull>15000){lastPull=Date.now();pull().catch(function(){})}
+  if(!document.hidden&&cfg.token&&cfg.gist&&!pushing&&Date.now()-lastPull>4000){lastPull=Date.now();pull().catch(function(){})}
 });
 async function init(){
   var loc=localLoad();
@@ -785,7 +790,7 @@ function openSort(){
   var list=ov.querySelector(".flist");
   Object.keys(SORTS).filter(function(k){return k!=="manual"}).forEach(function(k){
     var b=document.createElement("button");b.type="button";b.className="fi"+(sk===k?" on":"");b.textContent=SORTS[k].n;
-    b.onclick=function(){sk=(sk===k?"manual":k);try{localStorage.setItem(LS+"-sort",k)}catch(e){}ov.remove();renderList()};
+    b.onclick=function(){sk=(sk===k?"manual":k);try{localStorage.setItem(LS+"-sort",sk)}catch(e){}ov.remove();save();renderList()};
     list.appendChild(b);
   });
   ov.querySelector(".no").onclick=function(){ov.remove()};
