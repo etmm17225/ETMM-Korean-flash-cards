@@ -204,6 +204,8 @@ nav button{font-size:14px;padding:10px 2px;min-width:0}
 :root{--g1:#e8e8ea;--g2:#f3f3f5;--cp:#d12a8b;--cb:#2d9ae0}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--g1:#37373d;--g2:#2b2b30;--cp:#ff6fb7;--cb:#5db4ff}}
 .kpos{font-size:13px;font-weight:400;color:var(--mu);margin-left:1px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#333;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;z-index:80;opacity:1;transition:opacity .5s;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.toast.out{opacity:0}
 </style>
 </head>
 <body>
@@ -362,6 +364,7 @@ nav button{font-size:14px;padding:10px 2px;min-width:0}
     <div class="msg" id="austat"></div>
     <button class="sm" id="auclear" type="button">清除已匯入的音檔</button>
   </div>
+  <div class="msg" style="text-align:center">網站版本：2026-11-05（排序同步版）</div>
   <div class="sec">
     <div class="h2">💾 備份</div>
     <button class="sm" id="exp">匯出單字</button>
@@ -481,21 +484,31 @@ function setRev(v){rev=v;try{localStorage.setItem(LS+"-rev",String(v))}catch(e){
 function hadSynced(){try{return localStorage.getItem(LS+"-synced")==="1"}catch(e){return false}}
 function markSynced(v){try{v?localStorage.setItem(LS+"-synced","1"):localStorage.removeItem(LS+"-synced")}catch(e){}}
 function syncOk(){return "☁️ 已同步（"+words.length+" 個單字）"}
+var gEtag={};
 function gh(path,opt){
   opt=opt||{};
+  var isGet=!opt.method||opt.method==="GET";
   opt.headers={"Authorization":"Bearer "+cfg.token,"Accept":"application/vnd.github+json","Content-Type":"application/json"};
+  if(isGet&&gEtag[path])opt.headers["If-None-Match"]=gEtag[path];
   return fetch(API+path,opt).then(function(r){
+    if(r.status===304)return {notModified:true};
     if(!r.ok){var e=new Error("http");e.status=r.status;throw e}
+    if(isGet){var et=r.headers.get("ETag");if(et)gEtag[path]=et}
     return r.json();
   });
 }
-function body(){return JSON.stringify({rev:rev,words:words,sort:(typeof sk==="string"?sk:"manual")})}
+function toast(t){
+  var d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);
+  setTimeout(function(){d.classList.add("out")},2200);setTimeout(function(){d.remove()},2800);
+}
+function body(){var o={rev:rev,words:words};if(sortRev>0){o.sort=sk;o.sortRev=sortRev}return JSON.stringify(o)}
 function save(){localSave();setRev(Date.now());schedulePush()}
-function schedulePush(){if(!cfg.token||!cfg.gist)return;clearTimeout(pushT);pushT=setTimeout(push,1200)}
+var dirtyPush=false;
+function schedulePush(){if(!cfg.token||!cfg.gist)return;dirtyPush=true;clearTimeout(pushT);pushT=setTimeout(push,1200)}
 function push(){
   if(!cfg.token||!cfg.gist)return;
   if(pushing){again=true;return}
-  pushing=true;$("#syncmsg").textContent="☁️ 同步中…";
+  pushing=true;dirtyPush=false;$("#syncmsg").textContent="☁️ 同步中…";
   var f={};f[FILE]={content:body()};
   gh("/"+cfg.gist,{method:"PATCH",body:JSON.stringify({files:f})}).then(
     function(){$("#syncmsg").textContent=syncOk()},
@@ -503,9 +516,10 @@ function push(){
   ).then(function(){pushing=false;if(again){again=false;push()}});
 }
 function seed(){return SEED.map(function(p){return mk(p[0],p[1],p[2])})}
-function adoptSort(v){
-  if(typeof v!=="string"||typeof SORTS==="undefined"||!SORTS[v]||v===sk)return;
-  sk=v;try{localStorage.setItem(LS+"-sort",v)}catch(e){}
+function adoptSort(v,r){
+  if(typeof r!=="number"||r<=sortRev||typeof v!=="string"||typeof SORTS==="undefined"||!SORTS[v])return false;
+  sk=v;sortRev=r;try{localStorage.setItem(LS+"-sort",v);localStorage.setItem(LS+"-sortrev",String(r))}catch(e){}
+  return true;
 }
 function applyWords(w){
   words=clone(w);
@@ -513,26 +527,31 @@ function applyWords(w){
   if(cur){cur=words.filter(function(x){return x.id===cur.id})[0]||null}
   render();
 }
-async function pull(){
-  var g=await gh("/"+cfg.gist),file=g.files&&g.files[FILE],remote=null;
+async function pull(notify){
+  var g=await gh("/"+cfg.gist);
+  if(g.notModified){lastPull=Date.now();return}
+  var file=g.files&&g.files[FILE],remote=null;
   if(file){
     if(file.truncated){remote=await (await fetch(file.raw_url)).json()}
     else{try{remote=JSON.parse(file.content)}catch(e){}}
   }
   lastPull=Date.now();
   if(!remote||!remote.words){push();return}
-  var cw=remote.words,crev=remote.rev||0;
+  var cw=remote.words,crev=remote.rev||0,sortChanged=adoptSort(remote.sort,remote.sortRev),applied=false;
   if(!hadSynced()){
     var merged=clone(cw),have={},ids={};
     merged.forEach(function(w){have[key(w)]=1;ids[w.id]=1});
     var seedKeys={};SEED.forEach(function(p){seedKeys[p[0]+"|"+p[1]]=1});
     words.forEach(function(w){if(!ids[w.id]&&!have[key(w)]&&!(seedKeys[key(w)]&&!(w.ok||w.no))){merged.push(w);have[key(w)]=1}});
-    adoptSort(remote.sort);applyWords(merged);localSave();setRev(Date.now());markSynced(true);push();
+    adoptSort(remote.sort,remote.sortRev);applyWords(merged);localSave();setRev(Date.now());markSynced(true);push();
   }else if(crev>rev){
-    adoptSort(remote.sort);applyWords(cw);localSave();setRev(crev);
+    adoptSort(remote.sort,remote.sortRev);applyWords(cw);localSave();setRev(crev);applied=true;
   }else if(rev>crev){
     push();
   }
+  if(sortChanged&&!applied)render();
+  if(notify&&(applied||sortChanged))toast("已更新：其他裝置有變更");
+  if(sortRev>(+remote.sortRev||0))push();
   if(!pushing)$("#syncmsg").textContent=syncOk();
 }
 async function connect(){
@@ -549,8 +568,18 @@ async function connect(){
     $("#syncmsg").textContent=e.status===401?"⚠️ GitHub 權杖無效或已過期。":e.status===404?"⚠️ 找不到這個 Gist，請檢查 Gist ID 與權杖是否屬於同一個帳號。":"⚠️ 無法連線 GitHub，目前使用本機資料。";
   }
 }
-document.addEventListener("visibilitychange",function(){
-  if(!document.hidden&&cfg.token&&cfg.gist&&!pushing&&Date.now()-lastPull>4000){lastPull=Date.now();pull().catch(function(){})}
+function autoPull(){
+  if(document.hidden||!cfg.token||!cfg.gist||pushing||dirtyPush)return;
+  if(typeof amBusy!=="undefined"&&amBusy)return;
+  var a=document.activeElement;
+  if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;               // do not interrupt typing
+  if(typeof game!=="undefined"&&game&&!$("#review").hidden)return;        // or a running game
+  lastPull=Date.now();pull(true).catch(function(){});
+}
+var pollT=null;
+function startPoll(){if(!pollT)pollT=setInterval(autoPull,15000)}
+["visibilitychange","focus","online","pageshow"].forEach(function(ev){
+  (ev==="visibilitychange"?document:window).addEventListener(ev,function(){if(Date.now()-lastPull>4000)autoPull()});
 });
 async function init(){
   var loc=localLoad();
@@ -558,6 +587,7 @@ async function init(){
   if(!words.length&&!cfg.gist){applyWords(seed());localSave()}
   $("#syncmsg").textContent="目前資料只存在這台裝置。";
   await connect();
+  startPoll();
 }
 
 /* ---- speech ---- */
@@ -724,7 +754,8 @@ async function classifyPos(items){
 /* ---- list ---- */
 var lf="all";
 var IC={edit:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ac)"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',trash:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--no)"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',star:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#f5a623"><polygon points="12 2.5 15.1 8.6 21.8 9.6 16.9 14.3 18.1 21 12 17.8 5.9 21 7.1 14.3 2.2 9.6 8.9 8.6"/></svg>',done:'<svg class="ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ok)"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',sort:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20V5M4 9l4-4 4 4M16 4v15M12 15l4 4 4-4"/></svg>',plus:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',x:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',filter:'<svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9.8M17.2 6H21M3 12h3.8M11.2 12H21M3 18h11.8M19.2 18H21"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg>'};
-var sk="manual";try{sk=localStorage.getItem(LS+"-sort")||"manual"}catch(e){}
+var sk="manual",sortRev=0;try{sk=localStorage.getItem(LS+"-sort")||"manual";sortRev=+localStorage.getItem(LS+"-sortrev")||0}catch(e){}
+if(sk!=="manual"&&!sortRev){sortRev=Date.now();try{localStorage.setItem(LS+"-sortrev",String(sortRev))}catch(e){}}
 function wts(w){return parseInt(String(w.id).slice(0,-4),36)||0}
 var zhCol=(function(){try{return new Intl.Collator("zh-u-co-zhuyin")}catch(e){return new Intl.Collator("zh-Hant")}})();
 var koCol=new Intl.Collator("ko");
@@ -790,7 +821,7 @@ function openSort(){
   var list=ov.querySelector(".flist");
   Object.keys(SORTS).filter(function(k){return k!=="manual"}).forEach(function(k){
     var b=document.createElement("button");b.type="button";b.className="fi"+(sk===k?" on":"");b.textContent=SORTS[k].n;
-    b.onclick=function(){sk=(sk===k?"manual":k);try{localStorage.setItem(LS+"-sort",sk)}catch(e){}ov.remove();save();renderList()};
+    b.onclick=function(){sk=(sk===k?"manual":k);try{localStorage.setItem(LS+"-sort",sk)}catch(e){}ov.remove();sortRev=Date.now();try{localStorage.setItem(LS+"-sortrev",String(sortRev))}catch(e){}save();renderList()};
     list.appendChild(b);
   });
   ov.querySelector(".no").onclick=function(){ov.remove()};
