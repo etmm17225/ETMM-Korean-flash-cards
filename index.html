@@ -308,13 +308,14 @@ nav button{font-size:14px;padding:10px 2px;min-width:0}
   </div>
   <div class="sec">
     <div class="h2">🔊 發音設定</div>
-    <div class="msg">發音是用這台裝置內建的韓文語音念的。聽起來不準的話，先換一個語音試試。</div>
-    <label>韓文語音</label>
+    <div class="msg">預設會依照瀏覽器、作業系統及這台裝置實際提供的韓文語音，自動挑選較合適的選項；也可以在下方手動指定。手動選擇會保存在這台裝置。</div>
+    <label>韓文語音（預設自動偵測）</label>
     <select id="svoice"></select>
+    <div class="msg" id="voicehint" aria-live="polite">正在偵測可用語音…</div>
     <label>語速：<span id="srateval"></span></label>
     <input id="srate" type="range" min="0.5" max="1.2" step="0.05" style="padding:0">
     <div style="display:flex;gap:8px;margin-top:12px"><button class="sm" id="vt1" type="button">試聽：며</button><button class="sm" id="vt2" type="button">試聽：안녕하세요</button></div>
-    <div class="msg" style="line-height:1.7"><b>Windows</b>：請用 <b>Microsoft Edge</b> 開啟這個網站。語音選單裡會出現名稱像「Microsoft … Online (Natural) - Korean (Korea)」的高品質韓文語音（需要連網），選它會自然很多。用 Chrome 或 Firefox 時，通常只有品質較差的語音，甚至完全沒有韓文語音，聲音就會很奇怪。<br><b>Mac／iPhone／iPad</b>：Safari 可能看不到另外下載的高品質語音（Premium、Enhanced），選單裡只會有內建的幾種。可以改用 Edge 或 Chrome 開啟試試看。<br>（語音實際能不能選到，要看你的裝置和瀏覽器。）</div>
+    <div class="msg" style="line-height:1.7">語音清單會因裝置、作業系統及瀏覽器而不同；網頁會先依環境推薦，再以裝置實際提供的語音為準。若自動推薦的語音無法播放，可從選單改選其他韓文語音，或選回「自動偵測」。</div>
   </div>
   <div class="sec">
     <div class="h2">✨ AI 功能（Gemini 免費額度）</div>
@@ -442,6 +443,7 @@ function mk(zh,ko,cat){return {id:uid(),zh:zh.trim(),ko:ko.trim(),tags:parseTags
 function localLoad(){try{var s=localStorage.getItem(LS);return s?JSON.parse(s):null}catch(e){return null}}
 function localSave(){try{localStorage.setItem(LS,JSON.stringify(words))}catch(e){}}
 var cfg=(function(){try{return JSON.parse(localStorage.getItem(LS+"-cfg"))||{}}catch(e){return {}}})();
+if(!cfg.voiceAutoDetectV2){cfg.voice="";cfg.voiceAutoDetectV2=true;try{localStorage.setItem(LS+"-cfg",JSON.stringify(cfg))}catch(e){}}
 function saveCfg(){try{localStorage.setItem(LS+"-cfg",JSON.stringify(cfg))}catch(e){}}
 async function ai(prompt){
   if(!cfg.gem){var e0=new Error("nokey");e0.code="nokey";throw e0}
@@ -593,14 +595,69 @@ async function init(){
 /* ---- speech ---- */
 var voice=null,clipURL={},curAudio=null;
 function koVoices(){return("speechSynthesis" in window)?speechSynthesis.getVoices().filter(function(v){return /^ko/i.test(v.lang)}):[]}
-function voiceScore(v){var n=v.name+" "+(v.voiceURI||""),sc=0;if(/natural/i.test(n))sc+=6;if(/premium|enhanced|siri/i.test(n))sc+=4;if(/yuna|유나/i.test(n))sc+=2;if(v.localService)sc+=1;return sc}
+function speechEnvironment(){
+  var ua=navigator.userAgent||"",platform=navigator.userAgentData&&navigator.userAgentData.platform||navigator.platform||"";
+  var brands=navigator.userAgentData&&navigator.userAgentData.brands||[];
+  var brandText=brands.map(function(x){return x.brand}).join(" ");
+  var browser="其他瀏覽器";
+  if(/Edg\//i.test(ua)||/Microsoft Edge/i.test(brandText))browser="Edge";
+  else if(/OPR\//i.test(ua)||/Opera/i.test(brandText))browser="Opera";
+  else if(/Firefox\//i.test(ua))browser="Firefox";
+  else if(/CriOS\//i.test(ua)||/Chrome\//i.test(ua)||/Google Chrome/i.test(brandText))browser="Chrome";
+  else if(/Safari\//i.test(ua))browser="Safari";
+  var os="其他裝置";
+  if(/iPhone|iPad|iPod/i.test(ua))os="iOS";
+  else if(/Mac/i.test(platform)||/Macintosh/i.test(ua))os="macOS";
+  else if(/Win/i.test(platform)||/Windows/i.test(ua))os="Windows";
+  else if(/Android/i.test(ua))os="Android";
+  else if(/Linux/i.test(platform)||/Linux/i.test(ua))os="Linux";
+  return {browser:browser,os:os,label:os+"／"+browser};
+}
+function voiceScore(v){
+  var env=speechEnvironment(),n=(v.name+" "+(v.voiceURI||"")).toLowerCase(),sc=0;
+  // 已實際驗證可用的 Google 韓文語音，在 Chrome 環境優先推薦。
+  if(/google/.test(n))sc+=env.browser==="Chrome"?160:105;
+  // Windows Edge 通常可使用 Microsoft 的 Natural 韓文語音。
+  if(env.os==="Windows"&&env.browser==="Edge"&&/microsoft/.test(n)&&/natural/.test(n))sc+=170;
+  // Apple 裝置上的 Apple／Siri 語音列為優先候選。
+  if((env.os==="macOS"||env.os==="iOS")&&(/apple|siri|yuna|유나/.test(n)))sc+=115;
+  if(/natural/.test(n))sc+=35;
+  if(/premium|enhanced/.test(n))sc+=20;
+  if(/yuna|유나/.test(n))sc+=8;
+  if(v.localService)sc+=4;
+  return sc;
+}
 function pickVoice(){
   var list=koVoices(),v=null;
+  // 有手動指定且目前裝置找得到時，尊重使用者選擇。
   if(cfg.voice)v=list.filter(function(x){return x.voiceURI===cfg.voice||x.name===cfg.voice})[0]||null;
+  // 自動模式，或原指定語音在此裝置不存在時，依環境推薦。
   if(!v&&list.length)v=list.slice().sort(function(a,b){return voiceScore(b)-voiceScore(a)})[0];
   voice=v;
+  updateVoiceHint();
 }
-if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=function(){pickVoice();fillVoiceSel();updateVWarn()}}
+function updateVoiceHint(){
+  var el=$("#voicehint");if(!el)return;
+  var env=speechEnvironment(),list=koVoices();
+  if(!("speechSynthesis" in window)){el.textContent="這個瀏覽器不支援語音播放。";return}
+  if(!list.length){el.textContent="環境："+env.label+"；尚未找到韓文語音，請稍候或確認裝置語音設定。";return}
+  if(cfg.voice&&voice&&(voice.voiceURI===cfg.voice||voice.name===cfg.voice)){
+    el.textContent="環境："+env.label+"；目前使用手動選擇："+voice.name;
+  }else if(voice){
+    el.textContent="環境："+env.label+"；自動推薦："+voice.name+(voice.localService?"":"（線上語音）");
+  }else{
+    el.textContent="環境："+env.label+"；尚未選出可用的韓文語音。";
+  }
+}
+function refreshSpeechVoices(){
+  pickVoice();fillVoiceSel();updateVWarn();
+}
+if("speechSynthesis" in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged=refreshSpeechVoices;
+  // 部分瀏覽器載入語音較慢，補幾次檢查，避免初次清單為空。
+  [250,700,1400,2400].forEach(function(ms){setTimeout(function(){refreshSpeechVoices()},ms)});
+}
 function speak(t){
   try{if(curAudio){curAudio.pause();curAudio=null}}catch(e){}
   if(clipURL[t]){
@@ -615,7 +672,7 @@ function speak(t){
   var synth=speechSynthesis,u=new SpeechSynthesisUtterance(t);
   u.lang="ko-KR";u.rate=(cfg.rate>0?cfg.rate:.85);
   if(voice)u.voice=voice;
-  u.onerror=function(e){if(e&&(e.error==="canceled"||e.error==="interrupted"))return;toast("發音失敗（"+((e&&e.error)||"未知")+"），請再按一次")};
+  u.onerror=function(e){if(e&&(e.error==="canceled"||e.error==="interrupted"))return;toast("發音失敗（"+((e&&e.error)||"未知")+"），可到設定切換韓文語音")};
   var go=function(){try{synth.resume()}catch(x){}synth.speak(u)};
   // starting a new utterance right after cancel() is silently dropped by some browsers, so wait a moment
   if(synth.speaking||synth.pending){synth.cancel();setTimeout(go,90)}else go();
@@ -627,13 +684,17 @@ function updateVWarn(){
 }
 function fillVoiceSel(){
   var s2=$("#svoice");if(!s2)return;
-  var list=koVoices();s2.innerHTML="";
-  var o0=document.createElement("option");o0.value="";o0.textContent=list.length?"自動（建議）":"（這台裝置沒有找到韓文語音）";s2.appendChild(o0);
-  list.forEach(function(v){var o=document.createElement("option");o.value=v.voiceURI||v.name;o.textContent=v.name+(v.localService?"":"（線上）");s2.appendChild(o)});
-  s2.value=cfg.voice||"";
-  if(s2.value!==(cfg.voice||""))s2.value="";
+  var list=koVoices(),current=s2.value;s2.innerHTML="";
+  var o0=document.createElement("option");o0.value="";o0.textContent=list.length?"自動偵測（依裝置推薦）":"（尚未找到韓文語音）";s2.appendChild(o0);
+  list.slice().sort(function(a,b){return voiceScore(b)-voiceScore(a)}).forEach(function(v){
+    var o=document.createElement("option");o.value=v.voiceURI||v.name;
+    o.textContent=v.name+(v.localService?"":"（線上）");s2.appendChild(o)
+  });
+  var wanted=cfg.voice||"";
+  s2.value=wanted;
+  if(s2.value!==wanted)s2.value="";
+  updateVoiceHint();
 }
-
 /* ---- review ---- */
 function scope(){return catf==="all"?words.slice():words.filter(function(w){return hasTag(w,catf)})}
 function pool(){
@@ -1751,7 +1812,7 @@ $("#stoken").value=cfg.token||"";$("#sgist").value=cfg.gist||"";$("#sgem").value
   var r=$("#srate"),lab=$("#srateval");
   r.value=(cfg.rate>0?cfg.rate:0.85);lab.textContent=(+r.value).toFixed(2);
   r.oninput=function(){cfg.rate=parseFloat(this.value);lab.textContent=(+this.value).toFixed(2);saveCfg()};
-  $("#svoice").onchange=function(){cfg.voice=this.value;saveCfg();pickVoice()};
+  $("#svoice").onchange=function(){cfg.voice=this.value;saveCfg();pickVoice();updateVoiceHint()};
   $("#vt1").onclick=function(){speak("며")};
   $("#vt2").onclick=function(){speak("안녕하세요")};
   fillVoiceSel();
