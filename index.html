@@ -605,15 +605,20 @@ function speak(t){
   try{if(curAudio){curAudio.pause();curAudio=null}}catch(e){}
   if(clipURL[t]){
     try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}
-    curAudio=new Audio(clipURL[t]);var pp=curAudio.play();if(pp&&pp.catch)pp.catch(function(){});
+    curAudio=new Audio(clipURL[t]);
+    var pp=curAudio.play();
+    if(pp&&pp.catch)pp.catch(function(){toast("沒有聲音：請確認手機沒有開靜音，音量也有調大")});
     return;
   }
-  if(!("speechSynthesis" in window)){alert("這個瀏覽器不支援語音播放");return}
+  if(!("speechSynthesis" in window)){toast("這個瀏覽器不支援語音播放");return}
   if(!voice)pickVoice();
-  speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";u.rate=(cfg.rate>0?cfg.rate:.85);
+  var synth=speechSynthesis,u=new SpeechSynthesisUtterance(t);
+  u.lang="ko-KR";u.rate=(cfg.rate>0?cfg.rate:.85);
   if(voice)u.voice=voice;
-  speechSynthesis.speak(u);
+  u.onerror=function(e){if(e&&(e.error==="canceled"||e.error==="interrupted"))return;toast("發音失敗（"+((e&&e.error)||"未知")+"），請再按一次")};
+  var go=function(){try{synth.resume()}catch(x){}synth.speak(u)};
+  // starting a new utterance right after cancel() is silently dropped by some browsers, so wait a moment
+  if(synth.speaking||synth.pending){synth.cancel();setTimeout(go,90)}else go();
 }
 function updateVWarn(){
   var w=$("#vwarn");if(!w)return;
@@ -846,7 +851,14 @@ function editWord(w){
     w.zh=z;w.ko=k;w.tags=parseTags(q("e3").value);delete w.cat;w.pos=q("e6").value;
     var p=parseInt(q("e4").value,10)-1;
     if(p>=0&&p<words.length&&p!==i){words.splice(i,1);words.splice(p,0,w)}
+    var needPos=!w.pos&&cfg.gem,wid=w.id;
     save();render();ov.remove();
+    if(needPos){
+      classifyPos([{zh:w.zh,ko:w.ko}]).then(function(r){
+        var cw=words.filter(function(x){return x.id===wid})[0];
+        if(cw&&!cw.pos&&r[0]){cw.pos=r[0];save();render();toast("已自動判斷詞性："+r[0]+"（"+POS_ABBR[r[0]]+"）")}
+      });
+    }
   };
 }
 function renderList(){
@@ -1339,18 +1351,22 @@ function auDecode(ab){
     return {ch:ch,rate:buf.sampleRate};
   });
 }
-function auDetect(ch,rate,sens){
-  var win=Math.max(1,Math.round(rate*0.01)),n=Math.floor(ch.length/win),rms=new Float32Array(n);
+function auDetect(ch,rate,sens,gap){
+  var win=Math.max(1,Math.round(rate*0.01)),n=Math.floor(ch.length/win),rms=new Float32Array(n),G=gap||25;
   for(var i=0;i<n;i++){var sum=0;for(var k=0;k<win;k++){var x=ch[i*win+k];sum+=x*x}rms[i]=Math.sqrt(sum/win)}
   var sorted=Array.prototype.slice.call(rms).sort(function(a,b){return a-b}),peak=sorted[Math.floor(sorted.length*0.99)]||0;
   var thr=peak*sens,segs=[],cur=null;
   for(var j=0;j<n;j++){
     if(rms[j]>thr){if(!cur)cur={s:j,e:j};else cur.e=j}
-    else if(cur&&j-cur.e>25){segs.push(cur);cur=null}
+    else if(cur&&j-cur.e>G){segs.push(cur);cur=null}
   }
   if(cur)segs.push(cur);
-  segs=segs.filter(function(g){return g.e-g.s>=12});
-  return segs.map(function(g){return {s:Math.max(0,g.s*win-Math.round(rate*0.04)),e:Math.min(ch.length,(g.e+1)*win+Math.round(rate*0.1))}});
+  segs=segs.filter(function(g){return g.e-g.s>=12}).map(function(g){return {s:g.s*win,e:(g.e+1)*win}});
+  var p1=Math.round(rate*0.04),p2=Math.round(rate*0.1);
+  return segs.map(function(g,i){
+    var left=i>0?Math.round((segs[i-1].e+g.s)/2):0,right=i<segs.length-1?Math.round((g.e+segs[i+1].s)/2):ch.length;
+    return {s:Math.max(left,g.s-p1),e:Math.min(right,g.e+p2)};
+  });
 }
 function auSlice(ch,rate,g){
   var n=g.e-g.s,pk=0,i;
@@ -1580,13 +1596,15 @@ function amStore(ch,rate,g){
   return {rate:r2,pcm:out.buffer};
 }
 function amSplit(d,items){
-  var sens=[0.04,0.02,0.08,0.01,0.12,0.2];
+  var sens=[0.04,0.02,0.08,0.01,0.12,0.2],gaps=[25,15,10,40,60,6];
   if(items.length===1){
-    var sg=auDetect(d.ch,d.rate,0.04);
+    var sg=auDetect(d.ch,d.rate,0.04,60);
     return sg.length?[{s:sg[0].s,e:sg[sg.length-1].e}]:[{s:0,e:d.ch.length}];
   }
-  var best=0;
-  for(var i=0;i<sens.length;i++){var g=auDetect(d.ch,d.rate,sens[i]);if(g.length===items.length)return g;if(!best)best=g.length}
+  for(var gi=0;gi<gaps.length;gi++)for(var i=0;i<sens.length;i++){
+    var g=auDetect(d.ch,d.rate,sens[i],gaps[gi]);
+    if(g.length===items.length)return g;
+  }
   return {mismatch:auDetect(d.ch,d.rate,0.04).length};
 }
 var amBusy=false;
